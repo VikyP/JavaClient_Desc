@@ -1,0 +1,31 @@
+TCP_Client_RecieverPrScr.unzip()  IOException	Unexpected end of ZLIB input stream		
+StudentPane.UnPackPrewiew()null		
+TCP_Client_RecieverPrScr.unzip()  IOException	Unexpected end of ZLIB input stream		
+StudentPane.UnPackPrewiew()null		
+TCP_Client_RecieverPrScr.unzip()  IOException	Unexpected end of ZLIB input stream		
+StudentPane.UnPackPrewiew()null		
+TCP_Client_RecieverPrScr.unzip()  IOException	Unexpected end of ZLIB input stream		
+StudentPane.UnPackPrewiew()null		
+TCP_Client_RecieverPrScr.unzip()  IOException	Unexpected end of ZLIB input stream		
+StudentPane.UnPackPrewiew()null		
+TCP_Client_RecieverPrScr.unzip()  IOException	Unexpected end of ZLIB input stream		
+StudentPane.UnPackPrewiew()null		
+null		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+Width (0) and height (0) cannot be <= 0		
+null		
+null		
+null		
+Width (0) and height (0) cannot be <= 0		
+null		
+Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
+Width (55) and height (0) cannot be <= 0		
+Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
+Index: 1, Size: 1		
+Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
