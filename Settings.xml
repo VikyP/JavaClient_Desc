@@ -26,11 +26,11 @@
         <Name> Student</Name>
       <!--Расположение и размеры доски-->  
         <BoundsBoard>
-            <X>226</X>
-            <Y>-908</Y>
-            <Width>1011</Width>
-            <Height>776</Height>
-	    	<Scale>1.018</Scale>
+            <X>95</X>
+            <Y>-918</Y>
+            <Width>952</Width>
+            <Height>714</Height>
+	    	<Scale>0.79</Scale>
         </BoundsBoard>
 
 	<!-- Size PreviewPane -->
@@ -38,7 +38,7 @@
       
 	<Colors>
 		<!--Цвет фона-->
-		<Background>CCFFFF</Background>
+		<Background>999999</Background>
         <!--Цвет текста-->
 		<Foreground>000099</Foreground>
 	</Colors>

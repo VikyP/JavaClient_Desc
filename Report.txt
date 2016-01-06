@@ -29,3 +29,20 @@ Width (55) and height (0) cannot be <= 0
 Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
 Index: 1, Size: 1		
 Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
+Index: 1, Size: 1		
+Index: 3, Size: 1		
+Index: 3, Size: 3		
+Index: 3, Size: 1		
+Index: 3, Size: 2		
+Index: 3, Size: 1		
+Index: 3, Size: 3		
+Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
+StudentPane.UnPackImage()  Exception	542598		
+StudentPane.UnPackImage()  Exception	55678		
+Index: 3, Size: 2		
+Index: 3, Size: 1		
+Index: 3, Size: 1		
+Index: 3, Size: 1		
+Index: 3, Size: 2		
+StudentPane.UnPackImage()  Exception	55678		
+Index: 3, Size: 1		
