@@ -6,10 +6,17 @@
 package userControl;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -25,6 +32,9 @@ public class ToolsPanel extends JPanel {
     public JToggleButton maxsize;
     public JButton forecolor;
     public JButton backcolor;
+    public JLabel IP;
+    public JLabel screenStatus;
+    
     
     public ToolsPanel()
     {
@@ -35,8 +45,8 @@ public class ToolsPanel extends JPanel {
        // this.historyOn.setEnabled(false);
         setButtonPaintOff(this.historyOn);
         TB.add(this.historyOn);
-        
-        
+       
+       // TB.setBackground(Color.red);
         this.screenDesk=new JToggleButton(ImageIconURL.get("resources/desk24.png"));
         this.screenDesk.setSelectedIcon(ImageIconURL.get("resources/_Monitor24.png"));
       //  this.screenDesk.setEnabled(false);
@@ -60,10 +70,21 @@ public class ToolsPanel extends JPanel {
         setButtonPaintOff(this.forecolor);
         TB.add(this.forecolor);
         
-        
+        JPanel panelStatus=new JPanel();
+        panelStatus.setLayout(new FlowLayout(FlowLayout.CENTER));
+        this.IP= new JLabel();
+       
+        this.IP.setIcon(ImageIconURL.get("resources/IP_student_.png"));
+        this.IP.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
+        this.IP.setHorizontalAlignment(SwingConstants.CENTER);
+       
+        this.screenStatus=new JLabel();
+        this.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
         JPanel TBWin= new JPanel();
         
-        this.minsize= new JButton(ImageIconURL.get("resources/minsize20_1.png"));
+        panelStatus.add(this.screenStatus);
+        panelStatus.add(this.IP);
+        this.minsize= new JButton(ImageIconURL.get("resources/minsize16.png"));
         this.minsize.setToolTipText("Свернуть");
         this.minsize.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
         
@@ -71,17 +92,19 @@ public class ToolsPanel extends JPanel {
         TBWin.add(this.minsize);
         
         this.maxsize= new JToggleButton(ImageIconURL.get("resources/maxSize20.png"));
+        this.maxsize.setSelectedIcon(ImageIconURL.get("resources/normSize20.png"));
         this.maxsize.setToolTipText("Развернуть");
         this.maxsize.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
         setButtonPaintOff( this.maxsize);
         TBWin.add(this.maxsize);
         
-        this.exit= new JButton(ImageIconURL.get("resources/close20_1.png"));
+        this.exit= new JButton(ImageIconURL.get("resources/close16.png"));
         this.exit.setToolTipText("Закрыть приложение");
         this.exit.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
         setButtonPaintOff( this.exit);
         TBWin.add(this.exit);
         
+        this.add(panelStatus,BorderLayout.CENTER);
         this.add(TB, BorderLayout.WEST);
         this.add(TBWin, BorderLayout.EAST);
     }

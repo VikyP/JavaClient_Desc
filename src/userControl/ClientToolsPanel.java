@@ -5,10 +5,7 @@
  */
 package userControl;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
