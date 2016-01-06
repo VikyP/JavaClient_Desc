@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 import masterPanel.ReportException;
 
 
@@ -33,7 +34,7 @@ import masterPanel.ReportException;
  *
  * @author viky
  */
-class TeacherPane extends Component
+class TeacherPane extends JPanel
 {
     public BufferedImage BI;    
     public BufferedImage BI_Row;
@@ -100,7 +101,7 @@ class TeacherPane extends Component
    
     
     @Override
-    public void paint(Graphics g)
+    public void paintComponent(Graphics g)
     { 
       
         if(this.isSelected)

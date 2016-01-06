@@ -37,12 +37,12 @@ import userControl.HistoryPanel;
 public class Canvas_BoardR extends JEditorPane
 {
 
-    private BufferedImage BI;
+  
     public HistoryPanel history;
     private ArrayList<PageContent> pages;
 
     //new Font("Consolas", Font.PLAIN, 16);
-    private int rowsCount = 30;
+    private byte rowsCount = 30;
     
     private int width_B = 710;
     private int height_B = 620;
@@ -125,7 +125,6 @@ public class Canvas_BoardR extends JEditorPane
                     Canvas_BoardR.this.setFont(F);
                     getMetricsScale(Canvas_BoardR.this.F.deriveFont(fontSize*scale));
                     getMetrics();
-                    System.out.println("    **************************");
                 }
 
             //номер доски отрицательный( транслируется доска не текущей даты)
@@ -138,15 +137,14 @@ public class Canvas_BoardR extends JEditorPane
             {
                 Canvas_BoardR.this.numberPageGet = 0;
             }
-            System.out.println("    *1");
+           
             if(!history.isVisible() && currentPage != numberPageGet)
             {
                 setCurrentPage();
             }
-             System.out.println("    *2");
             
             Canvas_BoardR.this.pagesUpdate(numberPageGet, s);
-            System.out.println("    *3");
+           // System.out.println("    *3");
 
              //Если отображается текущая доска
             //назначем ей текст
@@ -154,7 +152,7 @@ public class Canvas_BoardR extends JEditorPane
             {
                 if(! s.equals(Canvas_BoardR.this.getText()))
                 {
-                    System.out.println("    *4");
+                   // System.out.println("    *4");
                     Canvas_BoardR.this.setText("");                
                     Canvas_BoardR.this.setText(s);
                     return;
@@ -187,7 +185,9 @@ public class Canvas_BoardR extends JEditorPane
         public void getNewGraph(byte numPage, Dimension D, ArrayList<IShapeAction> SA)
         {
             System.out.println("     numPage"+  numPage);
-            System.out.println("     D"+  D.toString());
+            System.out.println("     D  "+  D.toString());
+            System.out.println("    Canvas_BoardR D  "+  Canvas_BoardR.this.getSize());
+            System.out.println("    scale  "+  Canvas_BoardR.this.scale);
             //случай, когда доска преподавателя не прорисована
             if(D.width!=0 && D.height!=0)
             {
@@ -225,11 +225,10 @@ public class Canvas_BoardR extends JEditorPane
     
     BufferedImage buffer;
 
-    public Canvas_BoardR(Dimension D, Color b, Color f, float sc)
+    public Canvas_BoardR(Dimension D, Color b, Color f)
     {
         this.history = new HistoryPanel();
         this.setOpaque(false);
-       // this.scale = sc;
         this.setEditable(false);
         this.setFocusable(false);
         buffer = new BufferedImage(this.width_B, this.height_B,BufferedImage.TYPE_INT_RGB);
@@ -244,7 +243,7 @@ public class Canvas_BoardR extends JEditorPane
 
         this.setBackground(b);
         this.setForeground(f);
-        //scale();
+        scale();
         setColorLine();
         
         this.pages = new ArrayList<PageContent>();
@@ -319,7 +318,7 @@ public class Canvas_BoardR extends JEditorPane
     
     private void getMetricsScale(Font f)
     { 
-        Graphics2D g2d= (Graphics2D)buffer.createGraphics();
+        Graphics2D g2d= (Graphics2D)this.getGraphics();
         g2d.setFont(f);
         FontMetrics metrics = g2d.getFontMetrics(f);
         this.rowHeigthSC = (byte)metrics.getHeight();
@@ -358,7 +357,7 @@ public class Canvas_BoardR extends JEditorPane
             Graphics2D g2D = (Graphics2D)g.create();
             rebuildBuffer();
             g.drawImage(buffer, 0, 0, this);
-            drawLinesNumber(g2D);    
+            drawLinesNumber(g2D);
             //изменяем порядок прорисовки сначала фигуры потом текст
             getUI().paint(g2D, this);
             g2D.dispose();
@@ -375,16 +374,12 @@ public class Canvas_BoardR extends JEditorPane
     {  
         Graphics2D g2D = buffer.createGraphics();
         g2D.setColor(getBackground());        
-        g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
-        
-        g2D.scale(this.scale, this.scale);
-         drawContur(g2D);
-
+        g2D.fillRect(0, 0, this.getWidth(), this.getHeight());        
+        g2D.scale(this.scale, this.scale); 
         for (IShapeAction R : this.getShapes())
         {
             R.draw(g2D);
-        }      
-       
+        } 
         g2D.dispose();    
     }
    
@@ -397,8 +392,9 @@ public class Canvas_BoardR extends JEditorPane
     {
         g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);       
         AlphaComposite A1 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-        g2D.setComposite(A1);        
-        g2D.setFont(F.deriveFont(fontSize*scale));
+        g2D.setComposite(A1); 
+        g2D.setColor(this.colorLine);
+        g2D.fillRect(0,(this.line+1)*this.rowHeigthSC-this.rowDescentSC,this.getWidth(),this.rowHeigthSC);
         g2D.setColor(this.getForeground());
         for (int i = 0; i < this.rowsCount; i++)
         {
@@ -415,7 +411,7 @@ public class Canvas_BoardR extends JEditorPane
         g2D.setComposite(A1);
         g2D.setColor(Color.GREEN);
         g2D.setColor(this.colorLine);
-        g2D.fillRect(0,(this.line+1)*this.rowHeigth-this.rowDescent,this.getWidth(),this.rowHeigth);
+        g2D.fillRect(0,(this.line+1)*this.rowHeigthSC-this.rowDescentSC,this.getWidth(),this.rowHeigthSC);
         g2D.drawRect(0, 0, this.getWidth()-5, this.getHeight()-5);
         AlphaComposite A2 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
         g2D.setComposite(A2);
@@ -468,6 +464,7 @@ public class Canvas_BoardR extends JEditorPane
     {  
         getMetricsScale(Canvas_BoardR.this.F.deriveFont(fontSize*scale));
         this.setSize(D);
+        this.setPreferredSize(D);
         this.setFont(F.deriveFont(fontSize*scale)); 
     }
    
@@ -493,9 +490,7 @@ public class Canvas_BoardR extends JEditorPane
     }
 
     private void pagesUpdate(int number, ArrayList<IShapeAction> SA)
-    {
-       
-        
+    {  
         while (this.pages.size() < number + 1)
         {
             this.pages.add(new PageContent((byte)this.pages.size(), this.getBackground(), this.getForeground(), new MyMouselistener()));

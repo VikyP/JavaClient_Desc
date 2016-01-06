@@ -6,7 +6,6 @@
 package receiver_board;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -16,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.border.Border;
 import masterPanel.SettingsConfig;
@@ -37,6 +37,8 @@ public class MasterReceiverBoard extends JPanel {
     JPanel canvasPanel;
     JColorChooser colorChooser ;
     JPanel panelHide;
+    
+    private JScrollPane scrollPane;
     
     private boolean locationFlag=false;
 
@@ -68,6 +70,7 @@ public class MasterReceiverBoard extends JPanel {
         this.colorChooser= new JColorChooser();
        
         this.tools = new ToolsPanel();
+        this.tools.IP.setText( " IP "+SC.IP.getHostAddress());
      //   this.tools.setPreferredSize(new Dimension(SC.Bounds.width,40));
         this.tools.forecolor.addActionListener(new ActionListener()
         {
@@ -144,8 +147,12 @@ public class MasterReceiverBoard extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                JToggleButton TB=(JToggleButton)e.getSource();                
-                setPanel(TB.isSelected());                
+                JToggleButton TB=(JToggleButton)e.getSource();   
+                if(TB.isSelected())
+                    scrollPane.setViewportView(MasterReceiverBoard.this.BR);
+                else
+                    scrollPane.setViewportView(MasterReceiverBoard.this.TP);
+                //setPanel();                
             }
         });
         this.add(this.tools, BorderLayout.NORTH);
@@ -157,24 +164,29 @@ public class MasterReceiverBoard extends JPanel {
         this.basePanel.setLayout(new BoxLayout(this.basePanel,BoxLayout.Y_AXIS));
         this.basePanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
         
-        this.canvasPanel= new JPanel();
-        this.canvasPanel.setOpaque(false);
-        this.canvasPanel.setLayout( new FlowLayout(FlowLayout.CENTER));
-        this.canvasPanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
+        //this.canvasPanel= new JPanel( new FlowLayout(FlowLayout.CENTER));
+      //  this.canvasPanel.setOpaque(false);
+       
+      //  this.canvasPanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
         
         TP= new TeacherPane(); 
+        TP.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
          
-        this.BR = new Canvas_BoardR(this.basePanel.getPreferredSize(),SC.Background,SC.Foreground, SC.scale);
-       
+        this.BR = new Canvas_BoardR(this.basePanel.getPreferredSize(),SC.Background,SC.Foreground);
+        scrollPane= new JScrollPane(BR);
         
-        this.canvasPanel.add(BR);
-        this.basePanel.add(this.canvasPanel);
+       // this.canvasPanel.add(BR);
+     //   this.basePanel.add(this.canvasPanel);
         
-       TP.setVisible(false);
-       this.basePanel.add(TP);        
+      // TP.setVisible(false);
        
-        this.add(this.basePanel,BorderLayout.CENTER);        
-        this.tools.add(this.BR.history, BorderLayout.SOUTH);
+       JPanel screenPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
+       screenPanel.setOpaque(false);
+    //   screenPanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
+       screenPanel.add(TP);
+      // this.basePanel.add(screenPanel); 
+       this.add(scrollPane,BorderLayout.CENTER);        
+       this.tools.add(this.BR.history, BorderLayout.SOUTH);
         
         
     }
@@ -190,11 +202,12 @@ public class MasterReceiverBoard extends JPanel {
     
     }
     
+    /*
     public void setPanel(boolean f)
     {   
         this.canvasPanel.setVisible(f);
         this.TP.setVisible(!f);
-    }
+    }*/
     
     
     public void setPanelToHide(JPanel p)

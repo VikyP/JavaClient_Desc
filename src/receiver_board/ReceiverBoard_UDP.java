@@ -38,9 +38,10 @@ public class ReceiverBoard_UDP extends Thread
     
     public EventTextChanged ETCh;
     public EventGraphChanged EGrCh;
-    private int port_UDP_Board;
+    private final int port_UDP_Board;
     private final byte  TEXT=1;
     private final byte  SHAPES=2;
+    public Dimension canvasSize;
     
     public ReceiverBoard_UDP( int port)
     {
@@ -48,6 +49,7 @@ public class ReceiverBoard_UDP extends Thread
         this.setDaemon(true);
         ETCh= new EventTextChanged();
         EGrCh= new EventGraphChanged();
+        canvasSize= new Dimension(0,0);
     }
     
     
@@ -96,12 +98,12 @@ public class ReceiverBoard_UDP extends Thread
                 switch (type) {
                     case TEXT:
                         try
-                        {                           
+                        {
+                        int arrSize=DIS.readInt();                           
                         byte line = DIS.readByte();                        
 //параметр для согласования размеров холста, шрифта, расположения и масштаба графики
                         byte fontHeigt= DIS.readByte();
-                        // размер пакета для записи
-                        int arrSize=DIS.readInt();
+                        // размер пакета для записи                       
                         String msg = DIS.readUTF(); 
                         ITextChanged ITCh = (ITextChanged) this.ETCh.getListener();                        
                         ITCh.getNewText(numberPage, line, fontHeigt, msg);                         
@@ -116,12 +118,10 @@ public class ReceiverBoard_UDP extends Thread
                         int arrSize=DIS.readInt();
                         IGraphChanged IGrCh = (IGraphChanged) this.EGrCh.getListener();
                         
-//параметр для согласования размеров холста, шрифта, расположения и масштаба графики
-                        Dimension D= new Dimension();
-                        D.width= DIS.readInt();
-                        D.height= DIS.readInt();
-                        
-                       IGrCh.getNewGraph(numberPage,D, readGraph(DIS));
+//параметр для согласования размеров холста, шрифта, расположения и масштаба графики                       
+                        canvasSize.width= DIS.readInt();
+                        canvasSize.height= DIS.readInt();                        
+                       IGrCh.getNewGraph(numberPage,canvasSize, readGraph(DIS));
                         break;
 
                 }        

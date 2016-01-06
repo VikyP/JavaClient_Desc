@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Calendar;
 import java.util.zip.GZIPInputStream;
 import masterPanel.ReportException;
 
@@ -24,12 +25,13 @@ public class ReceiverScreeen_UDP extends Thread
 {
     private int port_UDP;
     public EventImageChanged EImCh;
+    public Calendar timeReceive;
     public ReceiverScreeen_UDP (int port)
     {
         this.EImCh= new EventImageChanged();
         this.port_UDP=port;
         this.setDaemon(true);
-       // System.out.println("    port udp "+ port);
+        this.timeReceive = Calendar.getInstance();
     }
     
     @Override 
@@ -52,22 +54,22 @@ public class ReceiverScreeen_UDP extends Thread
                 
                 
                 /*************************************/
-                int isRecord=(int)DIS.readByte();
-                System.out.println(" is Record " + isRecord);
+                
+                this.timeReceive = Calendar.getInstance();
+                byte isRecord=DIS.readByte();
+                
+              System.out.println(" is Record " + isRecord);
                 int length=(int)DIS.readByte();
                 char[] name_gr= new char[length];
                 for(int i=0;i<length;i++)
                 {
                     name_gr[i]=DIS.readChar();
                 }        
-                System.out.println(" Group " + new String(name_gr));
-                
-                
+                ///////////System.out.println(" Group " + new String(name_gr));                
                  /*************************************/
                 int   lengthByteArr = DIS.readInt();
                 byte typeImage=DIS.readByte();
-                System.out.println("    ------------------------------"+lengthByteArr);
-                
+               ///////////// System.out.println("    ------------------------------"+lengthByteArr);                
                 ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
                 byte[] dataBuffer = new byte[8192];
                 int size = 0;
@@ -76,7 +78,7 @@ public class ReceiverScreeen_UDP extends Thread
                     int cnt = DIS.read(dataBuffer, 0, dataBuffer.length);
                     if (cnt == -1)
                     {
-                      break;//  throw new IOException("Recived - 1 bytes");
+                      break;
                     }
                     BAOS.write(dataBuffer, 0, cnt);
                     size = size + cnt;
@@ -106,7 +108,6 @@ public class ReceiverScreeen_UDP extends Thread
         {
             ReportException.write("Receiver_UDP.run()"+se.getMessage());
             System.out.println( " ReceiverScreeen_UDP  SocketException #1 : udp" + se.getMessage());
-                    
         }
     }
     
