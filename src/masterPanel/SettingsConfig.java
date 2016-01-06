@@ -98,7 +98,7 @@ public class SettingsConfig
             this.IP=InetAddress.getByName(ip.getTextContent().trim());
             // уточняем IP
             if(!this.IP.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
-                this.IP=InetAddress.getLocalHost();
+                this.IP=InetAddress.getByName(InetAddress.getLocalHost().getHostAddress());
            
             Element ip_udp = (Element)doc.getElementsByTagName("IP_UDP").item(0); 
             this.IP_UDP=InetAddress.getByName(ip_udp.getTextContent().trim());

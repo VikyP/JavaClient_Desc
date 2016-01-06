@@ -19,12 +19,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import receiver_board.MasterReceiverBoard;
@@ -32,6 +36,7 @@ import receiver_board.ReceiverBoard_UDP;
 import receiver_board.ReceiverScreeen_UDP;
 import student_teamviewer.ConnectionManager;
 import userControl.ClientToolsPanel;
+import userControl.ImageIconURL;
 
 /**
  *
@@ -76,7 +81,7 @@ public class MasterFrame extends JFrame {
                 int stepY = e.getY() - MasterFrame.this.begin.y;
                 Dimension newSize = new Dimension(MasterFrame.this.getPreferredSize().width + stepX, MasterFrame.this.getPreferredSize().height + stepY);
                 MasterFrame.this.setSize(newSize);
-                 System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
+                System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
             setNewSizeCanvas();
 
@@ -105,7 +110,6 @@ public class MasterFrame extends JFrame {
 
         }
     };
-
     class MyMouselistener extends MouseAdapter {
 
         @Override
@@ -179,8 +183,25 @@ public class MasterFrame extends JFrame {
     private MasterReceiverBoard MRB;
     private ReceiverBoard_UDP receiver;
     private ReceiverScreeen_UDP screen;
+    private Timer checkReceiverScreeen_UDP;
+    private TimerTask iconScreeen_UDP = new TimerTask()
+    {
+
+        @Override
+        public void run()
+        {
+            if(Calendar.getInstance().getTimeInMillis()-MasterFrame.this.screen.timeReceive.getTimeInMillis()>1000)
+                MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
+            else
+                 MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOn.png"));
+                
+   
+
+        }
+    };
     public MasterFrame()
     {
+        this.checkReceiverScreeen_UDP = new Timer();
         final SettingsConfig SC= new SettingsConfig();
         if(!SC.isValid)
         {
@@ -207,7 +228,8 @@ public class MasterFrame extends JFrame {
         
         receiver.ETCh.TextChangedAdd(MRB.getEvTextChanged());
         receiver.EGrCh.GraphChangedAdd(MRB.getEvGraphChanged());
-
+        
+        this.checkReceiverScreeen_UDP.schedule(iconScreeen_UDP, 1000, 2000);
         this.setContentPane(MRB);
         MRB.BR.addMouseListener(new MyMouselistener());
         MRB.BR.addMouseMotionListener(new myMouseMotionListener());
@@ -239,7 +261,7 @@ public class MasterFrame extends JFrame {
         this.tools.setBounds(40, MRB.getHeightToolBar(), 240, 120);
         this.tools.trancparency.addChangeListener(CL_transparency);
         this.tools.isAlwaysOnTop.addItemListener(CL_topAll);
-       
+    
         JLayeredPane lp = getLayeredPane();
         lp.add(this.tools, JLayeredPane.POPUP_LAYER);
         
@@ -280,9 +302,15 @@ public class MasterFrame extends JFrame {
                {
                    JToggleButton btn= (JToggleButton)e.getSource();
                    if(btn.isSelected())
-                     MasterFrame.this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+                   {
+                       MasterFrame.this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                       btn.setToolTipText("Свернуть в окно");
+                   } 
                    else
-                     MasterFrame.this.setExtendedState(JFrame.NORMAL); 
+                   {
+                       MasterFrame.this.setExtendedState(JFrame.NORMAL);
+                       btn.setToolTipText("Развернуть");
+                   } 
                    
                }
           });
