@@ -39,7 +39,7 @@ public class MasterReceiverBoard extends JPanel {
     JColorChooser colorChooser ;
     JPanel panelHide;
     
-    private boolean isDesc=true;
+    public boolean isDesc=true;
     
     public JScrollPane scrollPane;
     
@@ -175,8 +175,8 @@ public class MasterReceiverBoard extends JPanel {
         screenPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
         screenPanel.setOpaque(false);
         screenPanel.setVisible(false);
-    //   screenPanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
-       screenPanel.add(TP);
+        screenPanel.add(TP);
+        
        this.basePanel.add(this.canvasPanel);
        this.basePanel.add(screenPanel); 
        screenPanel.setVisible(false);
@@ -198,12 +198,12 @@ public class MasterReceiverBoard extends JPanel {
     }
     
     
-    public void setPanel(boolean f)
+    public void setPanel(boolean isDesc)
     {   
-        System.out.println("    scale         ****");
-        this.canvasPanel.setVisible(f);
-        this.screenPanel.setVisible(!f);
-        if(f)
+       
+        this.canvasPanel.setVisible(isDesc);
+        this.screenPanel.setVisible(!isDesc);
+        if(isDesc)
             this.BR.scale();
     }
     

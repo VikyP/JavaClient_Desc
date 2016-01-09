@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><application>
 <Configuration>
     <!-- IP адресс компьтера студента  -->
-        <IP>192.168.0.105</IP>
+        <IP>192.168.0.104</IP>
 
     <!-- Broad Cast IP UDP  -->
         <IP_UDP>192.168.0.255</IP_UDP>
@@ -26,11 +26,11 @@
         <Name> Student</Name>
       <!--Расположение и размеры доски-->  
         <BoundsBoard>
-            <X>95</X>
-            <Y>-918</Y>
-            <Width>952</Width>
-            <Height>714</Height>
-	    	<Scale>0.79</Scale>
+            <X>201</X>
+            <Y>-993</Y>
+            <Width>918</Width>
+            <Height>909</Height>
+	    	<Scale>0.96</Scale>
         </BoundsBoard>
 
 	<!-- Size PreviewPane -->

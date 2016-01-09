@@ -108,7 +108,7 @@ public class SettingsConfig
                 byte [] newUDP=this.IP.getAddress();
                 for(int i=0; i<mask.length;i++)
                 { 
-                    System.out.println(" " +(mask[i]&0x000000FF));
+                   
                     if (((mask[i]&0x000000FF)^0xFF)==0)
                     {
                        

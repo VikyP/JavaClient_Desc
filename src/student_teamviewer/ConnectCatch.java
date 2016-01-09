@@ -36,7 +36,7 @@ public class ConnectCatch extends Thread {
 
     public ConnectCatch(InetAddress ip, int p_I, int w)
     {
-        System.out.println("Start catch");
+      //  System.out.println("Start catch");
         this.IP = ip;
         this.port_IMG = p_I;
         this.setDaemon(true);
@@ -46,7 +46,7 @@ public class ConnectCatch extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Run");
+      //  System.out.println("Run");
 
         ServerSocket server_IMG = null;
         try {

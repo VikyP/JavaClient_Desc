@@ -59,22 +59,22 @@ public class ReceiverScreeen_UDP extends Thread
                 this.timeReceive = Calendar.getInstance();
                 byte isRecord=DIS.readByte();
                 
-                System.out.println(" is Record " + isRecord+this.timeReceive.getTime().toString());
+               // System.out.println(" is Record " + isRecord+this.timeReceive.getTime().toString());
                 int length=(int)DIS.readByte();
                 char[] name_gr= new char[length];
                 for(int i=0;i<length;i++)
                 {
                     name_gr[i]=DIS.readChar();
                 }        
-                System.out.println(" Group " + new String(name_gr));                
+              //  System.out.println(" Group " + new String(name_gr));                
                  /*************************************/
                 
                 
                 
                 int   lengthByteArr = DIS.readInt();
-                System.out.println(" lengthByteArr " + lengthByteArr); 
+               // System.out.println(" lengthByteArr " + lengthByteArr); 
                 byte typeImage=DIS.readByte();
-                 System.out.println(" typeImage " + typeImage);
+             //    System.out.println(" typeImage " + typeImage);
                ///////////// System.out.println("    ------------------------------"+lengthByteArr);                
                 ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
                 byte[] dataBuffer = new byte[8192];
@@ -90,8 +90,7 @@ public class ReceiverScreeen_UDP extends Thread
                     size = size + cnt;
                 } 
                 while (lengthByteArr - size > 0);
-                if(typeImage==2)
-                        System.out.println("    LLLLLLLLLL    "+lengthByteArr);        
+                    
                 byte[] body= unzip(BAOS.toByteArray());
                
                 BAIS.reset();

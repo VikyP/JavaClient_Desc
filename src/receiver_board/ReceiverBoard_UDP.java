@@ -61,6 +61,7 @@ public class ReceiverBoard_UDP extends Thread
         
         try
         {
+            
             DatagramSocket  DS  = new DatagramSocket (this.port_UDP_Board);           
             byte[] byte_info= new byte [32768] ;
             DatagramPacket info= new DatagramPacket (byte_info, 0, byte_info.length);

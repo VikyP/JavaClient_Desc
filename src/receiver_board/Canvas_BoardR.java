@@ -161,15 +161,12 @@ public class Canvas_BoardR extends JEditorPane
             }
             
             Canvas_BoardR.this.pagesUpdate(numberPageGet, s);
-           // System.out.println("    *3");
-
              //Если отображается текущая доска
             //назначем ей текст
             if (currentPage == numberPageGet )
             {
                 if(! s.equals(Canvas_BoardR.this.getText()))
                 {
-                   // System.out.println("    *4");
                     Canvas_BoardR.this.setText("");                
                     Canvas_BoardR.this.setText(s);
                     return;
@@ -179,10 +176,8 @@ public class Canvas_BoardR extends JEditorPane
                 {
                     line=numLine;
                     Canvas_BoardR.this.repaint();
-
                 }
             }
-            
             
             }
             catch(Exception exc)
@@ -200,11 +195,11 @@ public class Canvas_BoardR extends JEditorPane
     {
         @Override
         public void getNewGraph(byte numPage, Dimension D, ArrayList<IShapeAction> SA)
-        {
+        {/*
             System.out.println("     numPage"+  numPage);
             System.out.println("     D  "+  D.toString());
             System.out.println("    Canvas_BoardR D  "+  Canvas_BoardR.this.getSize());
-            System.out.println("    scale  "+  Canvas_BoardR.this.scale);
+            System.out.println("    scale  "+  Canvas_BoardR.this.scale);*/
             //случай, когда доска преподавателя не прорисована
             if(D.width!=0 && D.height!=0)
             {
@@ -462,7 +457,7 @@ public class Canvas_BoardR extends JEditorPane
         }
         
         Dimension D;
-        Dimension dimParent = this.getParent().getSize();
+        Dimension dimParent = this.getParent().getParent().getSize();
         this.scale=(float)(this.getParent().getSize().width/this.width_B);
        
         int scaleW = (dimParent.width * 1000) / this.width_B;
@@ -480,8 +475,7 @@ public class Canvas_BoardR extends JEditorPane
             System.out.println("H "+D.height);
         }
        
-        System.out.println(this.scale);
-        
+        System.out.println(this.scale);        
         setScale( D);
        
     }
@@ -489,6 +483,24 @@ public class Canvas_BoardR extends JEditorPane
     private void setScale(Dimension D)
     {  
         getMetricsScale(Canvas_BoardR.this.F.deriveFont(fontSize*scale));
+        Dimension Dim_parent=this.getParent().getSize();
+        boolean flag =false;
+        if(Dim_parent.width!=D.width)
+        {
+            Dim_parent.width=D.width;
+            flag =true;
+        }
+        if(Dim_parent.height!=D.height)
+        {
+            flag= true;
+            Dim_parent.height=D.height;
+        }
+      /*
+        if(flag)
+        {
+            this.getParent().setSize(Dim_parent);
+            this.getParent().setPreferredSize(Dim_parent);
+        }*/
         this.setSize(D);
         this.setPreferredSize(D);
         this.setFont(F.deriveFont(fontSize*scale)); 
