@@ -39,11 +39,10 @@ public class TeacherPane extends JComponent
     public BufferedImage BI;    
     public BufferedImage BI_Row;
   
-    private Dimension DImg;
+    public Dimension DImg;
     private Dimension DImgReal;
-    private int scale_point=1;
-    private Point p= new Point(0,0);
-    private Dimension imgD;
+    private int scale_point=1;  
+    public Dimension imgD=new Dimension(250,250);;
   
     public IImageChanged UR= new IImageChanged()
     {
@@ -82,7 +81,7 @@ public class TeacherPane extends JComponent
        //System.out.println(" Create StudentPane");
       
        this.DImg= new Dimension(PaneSize.width-10,PaneSize.height-20);
-       this.DImgReal= new Dimension();
+       this.DImgReal= new Dimension(PaneSize.width,PaneSize.height);
        this.BI= new BufferedImage(this.DImg.width,this.DImg.height, BufferedImage.TYPE_INT_ARGB); 
        this.BI_Row= new BufferedImage(this.DImg.width,this.DImg.height, BufferedImage.TYPE_INT_ARGB);
        
@@ -307,29 +306,43 @@ public class TeacherPane extends JComponent
     
     
     public void UpdateSize()
-    {
-        int w= this.getParent().getParent().getWidth();
-        int h =this.getParent().getParent().getHeight(); 
-        int scaleW=(w*1000)/this.DImgReal.width;
-        int scaleH=(h*1000)/this.DImgReal.height;
+    {       
+       
+        if(this.getParent().getParent()==null
+                ||
+                this.getParent().getParent().getWidth()==0
+               
+                ||
+                this.getParent().getParent().getHeight()==0)
+            return;
+        Dimension dimParent=this.getParent().getParent().getSize();
+      
+        int w= dimParent.width;
+        int h =dimParent.height;
+        int scaleW =1000;
+      //  if(this.DImgReal.width>dimParent.width)
+            scaleW=(w*1000)/this.DImgReal.width;
+        int scaleH=1000;
+        
+       // if(this.DImgReal.height>dimParent.height)
+          scaleH=(h*1000)/this.DImgReal.height;
          
         if(scaleW<scaleH)
         {  
             this.scale_point=w*1000/this.DImgReal.width;
             this.imgD=new Dimension(w,this.scale_point*this.DImgReal.height/1000);
-            
         }
         else
         {
-          //  System.out.println(scaleH*this.bi.getHeight());
-            this.scale_point=h*1000/this.DImgReal.height;
-            this.imgD=new Dimension(this.DImgReal.width*this.scale_point/1000,h);
+           this.scale_point=h*1000/this.DImgReal.height;
+           this.imgD=new Dimension(this.DImgReal.width*this.scale_point/1000,h);
            
         }
+        this.getParent().getParent().setSize(imgD);
+        this.getParent().setSize(imgD);
         this.setSize(imgD);
         this.setPreferredSize(imgD);
-        this.getParent().setSize(imgD);
-    
+       
     }
     
 }
