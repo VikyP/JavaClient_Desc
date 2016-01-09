@@ -19,6 +19,7 @@ public class ShapeType
     public static final int FillEllipse=6;
     public static final int Rectangle=10;  
     public static final int FillRectangle=11;  
+    public static final int Table=20;
     
     public static class LineCl implements IShapeModel
     {
@@ -198,9 +199,33 @@ public class ShapeType
         
     }
     
+     public static class TableCl implements IShapeModel
+    {
+        
+        @Override
+        public int getType()
+        {
+            return ShapeType.Table;
+        }
+
+        @Override
+        public String getName()
+        {
+            return "Table";
+        }
+
+        @Override
+        public String getToolTipText()
+        {
+            return "Таблица";
+        }
+        
+    }
+    
+    
     public static final IShapeModel[] Shapes={ new LineCl(), new LineHorizontalCl(), new LineVerticalCl(),new PenLineCl(), 
                                                new EllipseCl(),new FillEllipseCl(),new RectangleCl(),new FillRectangleCl()
-    
+    ,new TableCl()
     };
     
     
@@ -219,6 +244,8 @@ public class ShapeType
             case ShapeType.Rectangle:
             case ShapeType.FillRectangle:
                 return "Прямоугольник";
+            case ShapeType.Table:
+                    return " Таблица";
         
         }
     return "Shape ?";

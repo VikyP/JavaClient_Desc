@@ -35,10 +35,13 @@ public class MasterReceiverBoard extends JPanel {
     public TeacherPane TP;
     JPanel basePanel;
     JPanel canvasPanel;
+    JPanel screenPanel;
     JColorChooser colorChooser ;
     JPanel panelHide;
     
-    private JScrollPane scrollPane;
+    private boolean isDesc=true;
+    
+    public JScrollPane scrollPane;
     
     private boolean locationFlag=false;
 
@@ -148,11 +151,8 @@ public class MasterReceiverBoard extends JPanel {
             public void actionPerformed(ActionEvent e) 
             {
                 JToggleButton TB=(JToggleButton)e.getSource();   
-                if(TB.isSelected())
-                    scrollPane.setViewportView(MasterReceiverBoard.this.BR);
-                else
-                    scrollPane.setViewportView(MasterReceiverBoard.this.TP);
-                //setPanel();                
+                
+              // setPanel(TB.isSelected());                
             }
         });
         this.add(this.tools, BorderLayout.NORTH);
@@ -164,28 +164,23 @@ public class MasterReceiverBoard extends JPanel {
         this.basePanel.setLayout(new BoxLayout(this.basePanel,BoxLayout.Y_AXIS));
         this.basePanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
         
-        //this.canvasPanel= new JPanel( new FlowLayout(FlowLayout.CENTER));
-      //  this.canvasPanel.setOpaque(false);
-       
-      //  this.canvasPanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
-        
         TP= new TeacherPane(); 
         TP.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
          
         this.BR = new Canvas_BoardR(this.basePanel.getPreferredSize(),SC.Background,SC.Foreground);
-        scrollPane= new JScrollPane(BR);
+        this.canvasPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.canvasPanel.setOpaque(false);
+        this.canvasPanel.add(this.BR);
         
-       // this.canvasPanel.add(BR);
-     //   this.basePanel.add(this.canvasPanel);
-        
-      // TP.setVisible(false);
-       
-       JPanel screenPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
-       screenPanel.setOpaque(false);
+        screenPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
+        screenPanel.setOpaque(false);
+        screenPanel.setVisible(false);
     //   screenPanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
        screenPanel.add(TP);
-      // this.basePanel.add(screenPanel); 
-       this.add(scrollPane,BorderLayout.CENTER);        
+       this.basePanel.add(this.canvasPanel);
+       this.basePanel.add(screenPanel); 
+       screenPanel.setVisible(false);
+       this.add(this.basePanel,BorderLayout.CENTER);        
        this.tools.add(this.BR.history, BorderLayout.SOUTH);
         
         
@@ -202,12 +197,15 @@ public class MasterReceiverBoard extends JPanel {
     
     }
     
-    /*
+    
     public void setPanel(boolean f)
     {   
+        System.out.println("    scale         ****");
         this.canvasPanel.setVisible(f);
-        this.TP.setVisible(!f);
-    }*/
+        this.screenPanel.setVisible(!f);
+        if(f)
+            this.BR.scale();
+    }
     
     
     public void setPanelToHide(JPanel p)

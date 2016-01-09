@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import masterPanel.ReportException;
 
 
@@ -34,13 +34,16 @@ import masterPanel.ReportException;
  *
  * @author viky
  */
-class TeacherPane extends JPanel
+class TeacherPane extends JComponent
 {
     public BufferedImage BI;    
     public BufferedImage BI_Row;
     private boolean isSelected;
     private Dimension DImg;
     private Dimension DImgReal;
+    private int scale_point=1;
+    private Point p= new Point(0,0);
+    private Dimension imgD;
   
     public IImageChanged UR= new IImageChanged()
     {
@@ -120,6 +123,8 @@ class TeacherPane extends JPanel
         Graphics2D g2D = (Graphics2D) g.create();        
         g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2D.drawImage(this.BI,5,5,this.getWidth()-10,this.getHeight()-10,this);
+        
+      //  g2D.drawImage(this.BI, this.p.x, this.p.y,this.imgD.width, this.imgD.height, this);
         g2D.dispose();
     
     }
@@ -153,16 +158,18 @@ class TeacherPane extends JPanel
                    this.BI= new BufferedImage(WF, HF, BufferedImage.TYPE_INT_RGB);  
                 } 
                 
-            
+            int value=0;
+            int value1=0;
+            int value2=0;
             WritableRaster WR_Small = this.BI.getRaster();      
             DataBuffer DB_small = WR_Small.getDataBuffer();
             for (int i =0; i <HF; i++)
             { 
                 for (int j = 0; j < WF; j=j+2)
                 {
-                    int value=DIS.readInt();
-                    int value1=value&0x00F0F0F0;
-                    int value2=(value&0x000F0F0F)<<4;
+                    value=DIS.readInt();
+                    value1=value&0x00F0F0F0;
+                    value2=(value&0x000F0F0F)<<4;
                     DB_small.setElem(i*WF+j, value1) ;
                     DB_small.setElem(i*WF+j+1,value2) ;
                 }
@@ -206,11 +213,10 @@ class TeacherPane extends JPanel
             int stopRow=DIS.readInt();            
             int h=stopRow-startRow;
             
-            System.out.println("    W "+W);
-            System.out.println("    H "+H);
-            System.out.println("    h "+h);
             
-            
+            int value=0;
+            int value1=0;
+            int value2=0;
             if((this.BI_Row.getWidth()!=W)||(this.BI_Row.getHeight()!=h))
             {
                 this.BI_Row= new BufferedImage(W,h, BufferedImage.TYPE_INT_RGB);
@@ -222,21 +228,18 @@ class TeacherPane extends JPanel
             { 
                 for (int j = 0; j < W; j=j+2)
                 {
-                    int value=DIS.readInt();
-                    int value1=value&0x00F0F0F0;
-                    int value2=(value&0x000F0F0F)<<4;
+                    value=DIS.readInt();
+                    value1=value&0x00F0F0F0;
+                    value2=(value&0x000F0F0F)<<4;
                     DB_Row.setElem(i*W+j,value1) ;
-                    DB_Row.setElem(i*W+j+1,value2) ;
-                   
-                }
-                
+                    DB_Row.setElem(i*W+j+1,value2) ;                   
+                }                
             }
             
           
           synchronized(this.BI)
             {  
-                BufferedImage BI_TMP= BI;
-                
+                BufferedImage BI_TMP= BI;                
                 this.BI= new BufferedImage(W,H, BufferedImage.TYPE_INT_RGB);
                 Graphics2D graphics2D = this.BI.createGraphics();
                 graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR); //Has worked best in my case
@@ -280,6 +283,9 @@ class TeacherPane extends JPanel
          WritableRaster WR_Base = this.BI.getRaster();
          DataBuffer DB_Base = WR_Base.getDataBuffer(); 
 
+         int value=0;
+         int value1=0;
+         int value2=0;
             for (int b = 0; b < blocks_size; b++)
             {
                 int indexBlock =DIS.readInt();       
@@ -295,9 +301,9 @@ class TeacherPane extends JPanel
                         try
                         {   
 
-                            int value=DIS.readInt();                              
-                            int value1=value&0x00F0F0F0;
-                            int value2=(value&0x000F0F0F)<<4;
+                            value=DIS.readInt();                              
+                            value1=value&0x00F0F0F0;
+                            value2=(value&0x000F0F0F)<<4;
 
                             DB_Base.setElem(i+j, value1) ;
                             DB_Base.setElem(i+j+1,value2) ;
@@ -321,6 +327,39 @@ class TeacherPane extends JPanel
     }
 
        
+    }
+    
+    
+    private void UpdateSize()
+    {
+        int w= this.getParent().getWidth();
+        int h =this.getParent().getHeight(); 
+        
+       // System.out.println("scaleH  =" + w + "    ="+h);   
+        this.setPreferredSize(new Dimension(w,h));
+        
+        int scaleW=(w*1000)/this.DImgReal.width;
+       // System.out.println("scaleW  = " + scaleW);   
+                 
+        int scaleH=(h*1000)/this.DImgReal.height;
+         
+        if(scaleW<scaleH)
+        {  
+            this.scale_point=w*1000/this.DImgReal.width;
+            this.imgD=new Dimension(w,this.scale_point*this.DImgReal.height/1000);
+            this.p.x=0;
+            this.p.y=(h-this.DImgReal.height)/2;
+        }
+        else
+        {
+          //  System.out.println(scaleH*this.bi.getHeight());
+            this.scale_point=h*1000/this.DImgReal.height;
+            this.imgD=new Dimension(this.DImgReal.width*this.scale_point/1000,h);
+            this.p.x= (w-this.DImgReal.width)/2;
+            this.p.y=0;
+        }
+    
+    
     }
     
 }

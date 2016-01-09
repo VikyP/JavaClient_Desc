@@ -31,6 +31,9 @@ public class SPenLine  extends MyShape implements IShapeAction
     private Point Begin_Editable=null;
     private Point End_Editable=null;
     
+    private byte startLine=0;
+    private byte endLine=0;
+    
     private static final int step=3;
     private ArrayList <Point> BezierPoints;
     public ArrayList Poins()
@@ -39,7 +42,7 @@ public class SPenLine  extends MyShape implements IShapeAction
 
     }
     
-    public SPenLine( Point begin, Color c, float s, int t)            
+    public SPenLine( Point begin, Color c, float s, byte t)            
     { 
         super(begin, begin, c, s, t);
         this.Type=ShapeType.PenLine; 
@@ -49,7 +52,7 @@ public class SPenLine  extends MyShape implements IShapeAction
         this.End = begin; 
     }
     
-    public SPenLine( ArrayList<Point> points, Color c, float s, int t)            
+    public SPenLine( ArrayList<Point> points, Color c, float s, byte t)            
     { 
         super(points.get(0),points.get(points.size()-1), c, s, t); 
         this.Type=ShapeType.PenLine; 
@@ -59,7 +62,7 @@ public class SPenLine  extends MyShape implements IShapeAction
     }
     
     
-    public SPenLine(DataInputStream DIS, int type)
+    public SPenLine(DataInputStream DIS, byte type)
     {
         super(DIS, type);
         try 
@@ -84,6 +87,9 @@ public class SPenLine  extends MyShape implements IShapeAction
             (Begin.y < End.y) ? Begin.y : End.y,
             Math.abs(End.x - Begin.x),
             Math.abs(End.y - Begin.y));
+            
+            this.startLine=DIS.readByte();
+            this.endLine=DIS.readByte();
         } 
         catch (IOException ex)
         {
@@ -104,34 +110,7 @@ public class SPenLine  extends MyShape implements IShapeAction
       
     }
     
-     @Override
-   public void BinaryWrite(DataOutputStream DOS)
-   {
-        try
-        {
-            DOS.writeByte((byte) this.Type);
-            
-            DOS.writeInt(this.BezierPoints.size());// arraySize
-            
-           
-            for(Point p:this.BezierPoints)
-            {
-                DOS.writeInt(p.x);
-                
-                DOS.writeInt(p.y);
-                
-            }
-            
-            DOS.writeFloat(this.thicknessLine);
-            DOS.writeByte(this.typeLine);
-            DOS.writeInt(this.ColorLine.getRGB());
-            
-        }
-        catch (IOException ex) 
-        {
-            Logger.getLogger(MyShape.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+   
     @Override
     public void draw(Graphics2D g2D)
     {
@@ -151,7 +130,34 @@ public class SPenLine  extends MyShape implements IShapeAction
             BezierPoints.get(i+2).x, BezierPoints.get(i+2).y);          
         }
         
-        g2D.draw(gp); 
+       switch(this.startLine)
+        {
+            case EndLineType.ARROW:
+                EndLineType.drawArrowStart(g2D,this.Begin,BezierPoints.get(step-1));
+                break;
+            case EndLineType.CIRCLE:
+                g2D.fillOval(this.Begin.x-EndLineType.CIRCLE_SIZE, this.Begin.y-EndLineType.CIRCLE_SIZE,EndLineType.CIRCLE_SIZE*2, EndLineType.CIRCLE_SIZE*2);
+            break;
+                case EndLineType.RECTANGLE:
+                g2D.fillRect(this.Begin.x-EndLineType.RECTANGLE_SIZE, this.Begin.y-EndLineType.RECTANGLE_SIZE,EndLineType.RECTANGLE_SIZE*2, EndLineType.RECTANGLE_SIZE*2);
+            break;
+        
+        }
+        switch(this.endLine)
+        {
+            case EndLineType.ARROW:
+                EndLineType.drawArrowEnd(g2D,BezierPoints.get(BezierPoints.size()-step+1),this.End);
+                break;
+            case EndLineType.CIRCLE:
+                g2D.fillOval(this.End.x-EndLineType.CIRCLE_SIZE, this.End.y-EndLineType.CIRCLE_SIZE,EndLineType.CIRCLE_SIZE*2, EndLineType.CIRCLE_SIZE*2);
+            break;
+                case EndLineType.RECTANGLE:
+                g2D.fillRect(this.End.x-EndLineType.RECTANGLE_SIZE, this.End.y-EndLineType.RECTANGLE_SIZE,EndLineType.RECTANGLE_SIZE*2, EndLineType.RECTANGLE_SIZE*2);
+            break;
+        
+        }
+        
+        g2D.draw(gp);  
         
     }
 

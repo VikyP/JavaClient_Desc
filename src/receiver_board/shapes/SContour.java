@@ -24,7 +24,7 @@ public class SContour extends MyShape
     
     public SContour(){}
     
-    public SContour(DataInputStream DIS, int type)
+    public SContour(DataInputStream DIS, byte type)
     {
         super( DIS, type);
         try
@@ -48,37 +48,19 @@ public class SContour extends MyShape
         }
     }
     
-    public SContour(Point Begin, Point End, Color c, float s, int t) 
+    public SContour(Point Begin, Point End, Color c, float s, byte t) 
     {
         super(Begin, End, c,s, t);
         this.Filling=null;        
     }
     
-    public SContour(Point Begin, Point End, Color c, Color f, float s, int t) 
+    public SContour(Point Begin, Point End, Color c, Color f, float s, byte t) 
     {
         super(Begin, End, c, s, t);
         this.Filling=f;        
     }
-    @Override
-    public void BinaryWrite(DataOutputStream DOS)
-   {
-        try
-        {
-            DOS.writeByte((byte) this.Type);
-            DOS.writeInt(this.SRect.x);
-            DOS.writeInt(this.SRect.y);
-            DOS.writeInt(this.SRect.width);
-            DOS.writeInt(this.SRect.height);
-            DOS.writeFloat(this.thicknessLine);
-            DOS.writeByte(this.typeLine);
-            DOS.writeInt(this.ColorLine.getRGB());
-            
-        }
-        catch (IOException ex) 
-        {
-            Logger.getLogger(MyShape.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
+   
     
     protected void SetRE_ResizeMoveRightBottom(int deltaWidth, int deltaHeight)
     {

@@ -21,6 +21,7 @@ import receiver_board.shapes.SEllipse;
 import receiver_board.shapes.SLine;
 import receiver_board.shapes.SPenLine;
 import receiver_board.shapes.SRectangle;
+import receiver_board.shapes.STable;
 import receiver_board.shapes.ShapeType;
 
 /*
@@ -50,6 +51,7 @@ public class ReceiverBoard_UDP extends Thread
         ETCh= new EventTextChanged();
         EGrCh= new EventGraphChanged();
         canvasSize= new Dimension(0,0);
+        
     }
     
     
@@ -92,9 +94,9 @@ public class ReceiverBoard_UDP extends Thread
                 }        
                 //   System.out.println(" Group " + new String(name_gr));
                 byte numberPage=DIS.readByte(); 
-                System.out.println("  Page ="+numberPage);
+              //  System.out.println("  Page ="+numberPage);
                 byte type=DIS.readByte(); 
-                System.out.println("  type ="+type);
+              //  System.out.println("  type ="+type);
                 switch (type) {
                     case TEXT:
                         try
@@ -147,7 +149,7 @@ public class ReceiverBoard_UDP extends Thread
     private ArrayList<IShapeAction> readGraph(DataInputStream DIS)
     {
        ArrayList<IShapeAction>  shapes = new ArrayList<IShapeAction> ();
-       int type;
+       byte type;
        
        int length=0;
         try
@@ -164,7 +166,7 @@ public class ReceiverBoard_UDP extends Thread
             try
             {
                 type=DIS.readByte();
-                System.out.println("Type "+type);  
+                System.out.println(" ----------------------------"+type);
                 switch (type)
                 {
                     case ShapeType.Line:
@@ -180,6 +182,10 @@ public class ReceiverBoard_UDP extends Thread
                     case ShapeType.Rectangle:
                     case ShapeType.FillRectangle:
                          shapes.add( new SRectangle(DIS,type));
+                         
+                    case ShapeType.Table:
+                        System.out.println(" ----------------------------ShapeType.Table "+ ShapeType.Table);
+                         shapes.add( new STable(DIS,type));
                         break;
                 }
             } catch (IOException ex)
@@ -187,7 +193,7 @@ public class ReceiverBoard_UDP extends Thread
                 Logger.getLogger(ReceiverBoard_UDP.class.getName()).log(Level.SEVERE, null, ex);
             }
             }
-        
+       
         return shapes;
     
     }

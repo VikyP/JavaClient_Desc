@@ -9,6 +9,7 @@ package masterPanel;
 import com.sun.awt.AWTUtilities;
 //import com.sun.glass.ui.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,9 +24,11 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 
@@ -47,42 +50,56 @@ public class MasterFrame extends JFrame {
     private Point begin;
     private Point oldLocation;
 
-    class myMouseMotionListener implements MouseMotionListener {
+    class MouseMotionListenerFrame implements MouseMotionListener {
 
         @Override
-        public void mouseDragged(MouseEvent e) {
+        public void mouseDragged(MouseEvent e)
+        {
+          
             //перемещение окна поэкрану мышкой
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.MOVE_CURSOR) {
+            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.MOVE_CURSOR)  
+                
+            {
                 int stepX = e.getX() - MasterFrame.this.begin.x;
                 int stepY = e.getY() - MasterFrame.this.begin.y;
                 Point newLocation = new Point(MasterFrame.this.getX() + stepX, MasterFrame.this.getY() + stepY);
                 MasterFrame.this.setLocation(newLocation);
                 return;
             }
+            Dimension newSize= new Dimension();
+           
 
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.E_RESIZE_CURSOR) {
+            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.E_RESIZE_CURSOR)
+            {
                 int stepX = e.getX() - MasterFrame.this.begin.x;                
-                Dimension newSize = new Dimension(MasterFrame.this.getPreferredSize().width + stepX, MasterFrame.this.getPreferredSize().height+stepX);
-                MasterFrame.this.setSize(newSize);
+                 newSize = 
+                        new Dimension(MasterFrame.this.getPreferredSize().width + stepX, 
+                        MasterFrame.this.getPreferredSize().height+ MasterFrame.this.MRB.BR.getStepY(stepX));
+                
                 System.out.println("3    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
 
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
                 
                 int stepY = e.getY() - MasterFrame.this.begin.y;               
-                Dimension newSize = new Dimension(MasterFrame.this.getWidth(), MasterFrame.this.getPreferredSize().height + stepY);
-                MasterFrame.this.setSize(newSize);
-                System.out.println("1    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
+                 newSize = new Dimension(MasterFrame.this.getWidth()+ MasterFrame.this.MRB.BR.getStepX(stepY), 
+                        MasterFrame.this.getPreferredSize().height + stepY);
+                
+                System.out.println("1   x= "+ MasterFrame.this.MRB.BR.getStepX(stepY)+"  y ="+stepY);
+                
+                return;
                 
             }
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.SE_RESIZE_CURSOR)
             {
                 int stepX = e.getX() - MasterFrame.this.begin.x;
-                int stepY = e.getY() - MasterFrame.this.begin.y;
-                Dimension newSize = new Dimension(MasterFrame.this.getPreferredSize().width + stepX, MasterFrame.this.getPreferredSize().height + stepY);
-                MasterFrame.this.setSize(newSize);
+                int stepY = MasterFrame.this.MRB.BR.getStepY(stepX);
+                newSize = new Dimension(MasterFrame.this.getPreferredSize().width + stepX, MasterFrame.this.getPreferredSize().height + stepY);
+               
                 System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
+           
+            MasterFrame.this.setSize(newSize);
             setNewSizeCanvas();
 
         }
@@ -91,7 +108,7 @@ public class MasterFrame extends JFrame {
         public void mouseMoved(MouseEvent e)
         { 
             
-            int delta = 15;
+            int delta = 10;
             if ( (MasterFrame.this.getX() + MasterFrame.this.getWidth()-e.getXOnScreen()) < delta) {
                 if ((MasterFrame.this.getY() + MasterFrame.this.getHeight()-e.getYOnScreen()) < delta) {
                     MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.SE_RESIZE_CURSOR));
@@ -110,7 +127,8 @@ public class MasterFrame extends JFrame {
 
         }
     };
-    class MyMouselistener extends MouseAdapter {
+    private MouseMotionListenerFrame mouseMotionFrame;
+    class MouselistenerFrame extends MouseAdapter {
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -120,6 +138,11 @@ public class MasterFrame extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) 
         {
+            if (((JComponent)(MasterFrame.this.MRB.TP)).getCursor().getType() == java.awt.Cursor.DEFAULT_CURSOR) 
+            {
+               ((JComponent)(MasterFrame.this.MRB.TP)).setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR));
+            }
+            
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.DEFAULT_CURSOR) 
             {
                MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR));
@@ -150,7 +173,7 @@ public class MasterFrame extends JFrame {
 
         }
     };
-    
+    private MouselistenerFrame mouseFrame;
     /**
      * Обработка изменения положения слайдера прозрачности
      */
@@ -180,28 +203,40 @@ public class MasterFrame extends JFrame {
     };
 
     private ClientToolsPanel tools;
+    private final int toolPanelHeight=120;
+    private final int toolPanelWidth=240;
+    private final int toolPanelX=40;
     private MasterReceiverBoard MRB;
     private ReceiverBoard_UDP receiver;
     private ReceiverScreeen_UDP screen;
     private Timer checkReceiverScreeen_UDP;
     private TimerTask iconScreeen_UDP = new TimerTask()
     {
+        private boolean isDesc=true;
 
         @Override
         public void run()
         {
-            if(Calendar.getInstance().getTimeInMillis()-MasterFrame.this.screen.timeReceive.getTimeInMillis()>1000)
-                MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
+            boolean status=(Calendar.getInstance().getTimeInMillis()-MasterFrame.this.screen.timeReceive.getTimeInMillis()>1000);
+            
+            if(isDesc==status)
+                return;
             else
-                 MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOn.png"));
-                
-   
-
+            {
+                isDesc=status;
+                if(isDesc)
+                    MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
+                else
+                    MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOn.png"));
+                MasterFrame.this.MRB.setPanel(isDesc);
+            }
         }
     };
     public MasterFrame()
     {
         this.checkReceiverScreeen_UDP = new Timer();
+        this.mouseFrame= new MouselistenerFrame();
+        this.mouseMotionFrame= new MouseMotionListenerFrame();
         final SettingsConfig SC= new SettingsConfig();
         if(!SC.isValid)
         {
@@ -215,24 +250,28 @@ public class MasterFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Допускается запуск только одной копии");
             System.exit(0);        
         }
-        
+        this.setIconImage(ImageIconURL.get("resources/desk24.png").getImage());
         this.setMinimumSize(new Dimension(300,300));
         this.setBounds(SC.Bounds);
         this.setPreferredSize(SC.Bounds.getSize());
-        this.addMouseListener(new MyMouselistener());
-        this.addMouseMotionListener(new myMouseMotionListener());
+        this.addMouseListener(this.mouseFrame);
+        this.addMouseMotionListener(this.mouseMotionFrame);
         this.receiver = new ReceiverBoard_UDP(SC.PORT_UDP_BOARD);
         this.MRB = new MasterReceiverBoard(SC);
+     //   Dimension d=new Dimension(this.MRB.BR.getPreferredSize().width,MRB.getHeightToolBar()+this.MRB.BR.getPreferredSize().height);
+        //this.setPreferredSize(d);
+       // this.setSize(d);
         this.setBackground(SC.Background);
         ConnectionManager SenderPrScr = new ConnectionManager(SC);
         
         receiver.ETCh.TextChangedAdd(MRB.getEvTextChanged());
         receiver.EGrCh.GraphChangedAdd(MRB.getEvGraphChanged());
         
-        this.checkReceiverScreeen_UDP.schedule(iconScreeen_UDP, 1000, 2000);
+        this.checkReceiverScreeen_UDP.schedule(iconScreeen_UDP, 1000, 500);
         this.setContentPane(MRB);
-        MRB.BR.addMouseListener(new MyMouselistener());
-        MRB.BR.addMouseMotionListener(new myMouseMotionListener());
+        MRB.BR.addMouseListener(this.mouseFrame);
+        
+        MRB.BR.addMouseMotionListener(this.mouseMotionFrame);
         MRB.tools.historyOn.addActionListener(new ActionListener(){
 
             @Override
@@ -258,7 +297,7 @@ public class MasterFrame extends JFrame {
         
         this.tools = new ClientToolsPanel();
         this.tools.setVisible(false);
-        this.tools.setBounds(40, MRB.getHeightToolBar(), 240, 120);
+        this.tools.setBounds(toolPanelX, MRB.getHeightToolBar(), toolPanelWidth, toolPanelHeight);
         this.tools.trancparency.addChangeListener(CL_transparency);
         this.tools.isAlwaysOnTop.addItemListener(CL_topAll);
     
@@ -275,6 +314,8 @@ public class MasterFrame extends JFrame {
                 SC.saveBounds(MasterFrame.this.getBounds(),MRB.BR.getScale());
                 System.exit(0);
             }
+            
+            
         });
         
 
@@ -347,6 +388,8 @@ public class MasterFrame extends JFrame {
         this.screen.start();
         receiver.start();
     }
+    
+   
     
     private void setNewSizeCanvas()
     {     

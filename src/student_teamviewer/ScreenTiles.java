@@ -143,16 +143,14 @@ public class ScreenTiles
             {
                 byte[] buffer = new byte[32768];
                 
-                GZIPOutputStream gzos = new GZIPOutputStream (BAOS);
-                
+                GZIPOutputStream gzos = new GZIPOutputStream (BAOS);                
                 int length;
                 while ((length = BAIS.read(buffer)) > 0)
                 {
                     gzos.write(buffer, 0, length);
                 }
                 gzos.finish();
-                
-                
+                gzos.close();                
             }
             catch (FileNotFoundException ex)
             {
@@ -181,15 +179,15 @@ public class ScreenTiles
 
     
     private void getChanges()
-    {    
-       
+    {
         this.ImageToSend.CheckDimension(this.TypeView);
         DataBuffer DB_Base = this.ImageToSend.DataBase();
         DataBuffer DB_New = this.ImageToSend.DataNew();
         
         // очищается контейнер для отправки блоков
         this.blocks.clear();
-        
+        int value_Base=0;
+        int value_New=0;
         for (int block = 0; block < this.ImageToSend.getTotalCountOfBlocks(); block++)
         {   
             //опредеяет переход на новую строку блока
@@ -205,8 +203,8 @@ public class ScreenTiles
                 for (int j = 0; j < this.ImageToSend.blockPixelWidth ; j++)
                 {
                  
-                    int value_Base =DB_Base.getElem(i+j);
-                    int value_New =DB_New.getElem(i+j);
+                    value_Base =DB_Base.getElem(i+j);
+                    value_New =DB_New.getElem(i+j);
                     if ((value_Base ^ value_New) != 0)
                     {
                         this.blocks.add(block);
@@ -234,25 +232,25 @@ public class ScreenTiles
         try
         {
             //////////int size= ( 4+ 1+   4+  4 +  image.w* image.h *2);
-            int size= 4+1+4+4+DB_small.getSize()*2;
+            int size= Integer.BYTES+Byte.BYTES+Integer.BYTES+Integer.BYTES+DB_small.getSize()*2;
             
-          //  DOS.writeInt(size);//4
-          //  DOS.writeByte((byte)0);//1
             int w=this.ImageToSend.dSmall.width;
             int h=this.ImageToSend.dSmall.height;
             DOS.writeInt(w);//4
           //  System.out.println("    w ="+ w);
             DOS.writeInt(h );//4
           //  System.out.println("    h"+ h);
-            
+            int value1=0;
+            int value2=0;
+            int pixel=0;
             for (int i = 0; i <h; i++)
             {
                 for (int j = 0; j < w; j=j+2)
                 {
                     
-                  int value1 =DB_small.getElem(i*w+j)&0x00F0F0F0;
-                  int value2 =DB_small.getElem(i*w+j+1)&0x00F0F0F0;
-                  int pixel=(value1|((value2 &0x00FFFFFF)>>4));
+                  value1 =DB_small.getElem(i*w+j)&0x00F0F0F0;
+                  value2 =DB_small.getElem(i*w+j+1)&0x00F0F0F0;
+                  pixel=(value1|((value2 &0x00FFFFFF)>>4));
                   DOS.writeInt(pixel);
                    
                 }

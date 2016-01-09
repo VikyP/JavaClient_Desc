@@ -22,7 +22,7 @@ import java.io.DataOutputStream;
  */
 public class MyShape
 {    
-    protected int Type;
+    protected byte Type;
     protected float thicknessLine;
     protected int typeLine;
     protected Color ColorLine;
@@ -31,12 +31,12 @@ public class MyShape
     protected boolean isEditable=false;
     
     public MyShape(){}
-    public MyShape(DataInputStream DIS, int type)
+    public MyShape(DataInputStream DIS, byte type)
     {
         this.Type=type;
     }
     
-    public MyShape(Point Begin, Point End, Color c, float s, int t)
+    public MyShape(Point Begin, Point End, Color c, float s, byte t)
     {
         this.SRect = new Rectangle(
                 (Begin.x < End.x) ? Begin.x : End.x,
@@ -57,8 +57,7 @@ public class MyShape
         return g2D;
     }
     
-    public void BinaryWrite(DataOutputStream DOS)
-    {}
+   
     
     
     
@@ -77,6 +76,8 @@ public class MyShape
             case ShapeType.Rectangle:
             case ShapeType.FillRectangle:
                 return "Rectangle";
+            case ShapeType.Table:
+                return "Table";
         
         }
     return "Shape ?";

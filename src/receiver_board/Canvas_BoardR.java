@@ -93,6 +93,23 @@ public class Canvas_BoardR extends JEditorPane
     {
         return this.scale;
     }
+     
+     public int getStepY(int stepX)
+     {
+         if(this.getHeight()==0 || this.getWidth()==0)
+             return 0;
+         int y =(this.getWidth()+stepX)*this.getHeight()/this.getWidth()-this.getHeight();
+           System.out.println(" Y "+ y);      
+        return y;
+     }
+     public int getStepX(int stepY)
+     {
+         if(this.getHeight()==0 || this.getWidth()==0)
+             return 0;
+        int x =(stepY+this.getHeight())*this.getWidth()/this.getHeight()-this.getWidth();
+           System.out.println("xxxxxxxxxxxxxxxxxxxxxx X "+ x);      
+        return x;
+     }
 
     class MyMouselistener extends MouseAdapter
     {
@@ -233,7 +250,7 @@ public class Canvas_BoardR extends JEditorPane
         this.setFocusable(false);
         buffer = new BufferedImage(this.width_B, this.height_B,BufferedImage.TYPE_INT_RGB);
         getMetrics();
-        
+        getMetricsScale(F);
         this.dimScale= D;// new Dimension((int)(this.width_B*sc), (int)(this.height_B*sc));
         this.setSize(new Dimension(this.width_B, this.height_B));
         this.setPreferredSize(new Dimension(this.width_B, this.height_B));
@@ -243,7 +260,7 @@ public class Canvas_BoardR extends JEditorPane
 
         this.setBackground(b);
         this.setForeground(f);
-        scale();
+       
         setColorLine();
         
         this.pages = new ArrayList<PageContent>();
@@ -307,25 +324,31 @@ public class Canvas_BoardR extends JEditorPane
         g2d.setFont(this.F);
         FontMetrics metrics = g2d.getFontMetrics(this.F);
         this.rowHeigth= (byte)metrics.getHeight();
+        System.out.println(" this.rowHeigth   "+this.rowHeigth);
         this.colWidth = (byte)metrics.charWidth('X');
         this.rowDescent= (byte)metrics.getMaxDescent();
         this.width_B=this.colWidth*(this.colsCount+1)+this.left+this.right;
         this.height_B=this.rowHeigth*(this.rowsCount+1)+this.top+this.bottom ;
         g2d.dispose();        
         buffer = new BufferedImage(this.width_B, this.height_B,BufferedImage.TYPE_INT_RGB);
+        
        
     }
     
     private void getMetricsScale(Font f)
     { 
-        Graphics2D g2d= (Graphics2D)this.getGraphics();
+         Graphics2D g2d;
+        if(this.getGraphics()==null)
+            g2d= (Graphics2D)buffer.createGraphics();
+        else
+            g2d= (Graphics2D)this.getGraphics();
         g2d.setFont(f);
         FontMetrics metrics = g2d.getFontMetrics(f);
         this.rowHeigthSC = (byte)metrics.getHeight();
         this.colWidthSC  = (byte)metrics.charWidth('X');
         this.rowDescentSC=(byte)metrics.getMaxDescent();
-        this.width_SC=this.colWidthSC*(this.colsCount+1)+(int)((this.left+this.right)*this.scale);
-        this.height_SC=this.rowHeigth*(this.rowsCount+1)+(int)((this.top+this.bottom)*this.scale) ;
+      //  this.width_SC=this.colWidthSC*(this.colsCount+1)+(int)((this.left+this.right)*this.scale);
+       // this.height_SC=this.rowHeigth*(this.rowsCount+1)+(int)((this.top+this.bottom)*this.scale) ;
         g2d.dispose(); 
     }
    
@@ -440,6 +463,8 @@ public class Canvas_BoardR extends JEditorPane
         
         Dimension D;
         Dimension dimParent = this.getParent().getSize();
+        this.scale=(float)(this.getParent().getSize().width/this.width_B);
+       
         int scaleW = (dimParent.width * 1000) / this.width_B;
         int scaleH = (dimParent.height * 1000) / this.height_B;
         if (scaleW < scaleH)
@@ -454,6 +479,7 @@ public class Canvas_BoardR extends JEditorPane
             D = new Dimension((int) ( this.width_B * this.scale), dimParent.height);
             System.out.println("H "+D.height);
         }
+       
         System.out.println(this.scale);
         
         setScale( D);
@@ -466,6 +492,7 @@ public class Canvas_BoardR extends JEditorPane
         this.setSize(D);
         this.setPreferredSize(D);
         this.setFont(F.deriveFont(fontSize*scale)); 
+        this.repaint();
     }
    
     /**

@@ -32,6 +32,7 @@ public class ReceiverScreeen_UDP extends Thread
         this.port_UDP=port;
         this.setDaemon(true);
         this.timeReceive = Calendar.getInstance();
+        this.timeReceive.add(Calendar.SECOND, 1);
     }
     
     @Override 
@@ -40,7 +41,7 @@ public class ReceiverScreeen_UDP extends Thread
         try
         {
             DatagramSocket  DS  = new DatagramSocket (this.port_UDP);           
-            byte[] byte_info= new byte [32768] ;
+            byte[] byte_info= new byte [65536] ;
             DatagramPacket info= new DatagramPacket (byte_info, 0, byte_info.length);
             
             
@@ -58,17 +59,22 @@ public class ReceiverScreeen_UDP extends Thread
                 this.timeReceive = Calendar.getInstance();
                 byte isRecord=DIS.readByte();
                 
-              System.out.println(" is Record " + isRecord);
+                System.out.println(" is Record " + isRecord+this.timeReceive.getTime().toString());
                 int length=(int)DIS.readByte();
                 char[] name_gr= new char[length];
                 for(int i=0;i<length;i++)
                 {
                     name_gr[i]=DIS.readChar();
                 }        
-                ///////////System.out.println(" Group " + new String(name_gr));                
+                System.out.println(" Group " + new String(name_gr));                
                  /*************************************/
+                
+                
+                
                 int   lengthByteArr = DIS.readInt();
+                System.out.println(" lengthByteArr " + lengthByteArr); 
                 byte typeImage=DIS.readByte();
+                 System.out.println(" typeImage " + typeImage);
                ///////////// System.out.println("    ------------------------------"+lengthByteArr);                
                 ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
                 byte[] dataBuffer = new byte[8192];
@@ -83,7 +89,9 @@ public class ReceiverScreeen_UDP extends Thread
                     BAOS.write(dataBuffer, 0, cnt);
                     size = size + cnt;
                 } 
-                while (lengthByteArr - size - Integer.BYTES > 0);
+                while (lengthByteArr - size > 0);
+                if(typeImage==2)
+                        System.out.println("    LLLLLLLLLL    "+lengthByteArr);        
                 byte[] body= unzip(BAOS.toByteArray());
                
                 BAIS.reset();
@@ -113,30 +121,36 @@ public class ReceiverScreeen_UDP extends Thread
     
     private byte [] unzip(byte [] tmp)
     {
+            
         byte[] buffer = new byte[8192]; 
         ByteArrayOutputStream Baos = new ByteArrayOutputStream();
         ByteArrayInputStream BAIS = new ByteArrayInputStream(tmp);
+       int length = 0;
         try
-        {
+        { 
             GZIPInputStream gzipis = new GZIPInputStream(BAIS);
-            int length = 0;
+            
             while ((length = gzipis.read(buffer)) > 0)
             {
                 Baos.write(buffer, 0, length);
             }
             BAIS.close();
+            gzipis.close();          
             
         } 
         catch (FileNotFoundException ex)
         {
-            System.out.println(ex.getMessage());
+            System.out.println("  1 "  +ex.getMessage());
             ReportException.write("TCP_Client_RecieverPrScr.unzip()  FileNotFoundException\t"+ex.getMessage());
         } 
         catch (IOException ex)
         {
-            System.out.println(ex.getMessage());
+            System.out.println( " 2 "+length + "  "+ex.getMessage());
              ReportException.write("TCP_Client_RecieverPrScr.unzip()  IOException\t"+ex.getMessage());
         }
+        finally {
+     
+    }
          
     return  Baos.toByteArray();
     

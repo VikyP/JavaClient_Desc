@@ -10,8 +10,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -21,98 +21,95 @@ import java.util.logging.Logger;
  *
  * @author 06585
  */
-public class SEllipse extends SContour implements IShapeAction 
+public class STable extends SContour implements IShapeAction  
 {
-    public SEllipse(Point Begin, Point End, Color c, float s, byte t)
+    private byte rows=0;
+    private byte columns=0;
+
+    public STable(DataInputStream DIS, byte type)
     {
-        super(Begin, End, c, s,  t);
-        this.Type=ShapeType.Ellipse;
-    }
+        super(DIS, type);
+        this.Filling=null;
+        try {
+            this.rows=DIS.readByte();
+            this.columns=DIS.readByte();
+        } catch (IOException ex) {
+            Logger.getLogger(STable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     
-    public SEllipse(Point Begin, Point End, Color c, Color f, float s, byte t) 
+    }
+    public STable(Point Begin, Point End, Color c, float s, byte t, byte r, byte col)
     {
         super(Begin, End, c, s, t);
-        this.Filling=f;
-        this.Type=ShapeType.FillEllipse;
+        this.Type=ShapeType.Table;
+        this.rows=r;
+        this.columns=col;
     }
     
-    public SEllipse (DataInputStream DIS, byte type)
-    {
-        super( DIS, type);
-        
-        try
-        {
-            if(this.Type==ShapeType.FillEllipse)
-                this.Filling= new Color(DIS.readInt());
-            else
-                this.Filling=null;
-        } catch (IOException ex)
-        {
-            Logger.getLogger(SEllipse.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    //@Override
-    public void draw(Graphics2D g2D ) 
-    {
-        Rectangle R=null;
-        if(this.isEditable)
-            R=this.RectEditable;
-        else
-            R=this.SRect;
-        if(this.Filling!=null)
-        {
-            g2D.setColor(this.Filling);
-            this.setProperties(g2D).fillOval(R.x, R.y, R.width, R.height);
-        }
-        else
-        this.setProperties(g2D).drawOval(R.x, R.y, R.width, R.height);
-       
-    }
-   
-  //  @Override
+     
+    @Override
     public Point getBegin()
     {
         return new Point(SRect.x,SRect.y);
     }
     
-   // @Override
+    @Override
     public Point getEnd()
     {
         return new Point(SRect.x+SRect.width,SRect.y+SRect.height);
     }
-  //   @Override
+     @Override
     public Rectangle getRectangle()
     {
         return this.SRect;
     }
-  //  @Override
+    @Override
     public int getType()
     {
        return this.Type;
     }
-  //  @Override
+
+     @Override
+    public void draw(Graphics2D g2D) 
+    {        
+        Rectangle R=null;
+        if(this.isEditable && this.RectEditable!=null)
+            R=this.RectEditable;
+        else
+            R=this.SRect;
+        
+       this.setProperties(g2D).drawRect(R.x, R.y, R.width, R.height);
+        for(int i=1;i<this.rows;i++)
+            g2D.drawLine(R.x, R.y+R.height/rows*i,R.x+ R.width,  R.y+R.height/rows*i);
+        
+        for(int i=1;i<this.columns; i++)
+            g2D.drawLine(R.x+R.width/columns*i, R.y, R.x+R.width/columns*i, R.y+R.height);
+        
+    }
+    
+     @Override
     public Rectangle resize_moveRightBottom(int deltaWidth, int deltaHeight)
     {
         this.SetRE_ResizeMoveRightBottom(deltaWidth, deltaHeight);
         return this.RectEditable;
     }
 
-  //  @Override
+    @Override
     public Rectangle resize_moveLeftTop(int deltaWidth, int deltaHeight)
     {
        this.SetRE_ResizeMoveLeftTop(deltaWidth, deltaHeight);
        return this.RectEditable;
     }
 
-  //  @Override
+    @Override
     public Rectangle resize_moveRightTop(int deltaWidth, int deltaHeight)
     {
        this.SetRE_ResizeMoveRightTop(deltaWidth, deltaHeight);
        return this.RectEditable;
     }
 
-  //  @Override
+    @Override
     public Rectangle resize_moveLeftBottom(int deltaWidth, int deltaHeight)
     {
         this.SetRE_ResizeMoveLeftBottom(deltaWidth, deltaHeight);
@@ -120,25 +117,24 @@ public class SEllipse extends SContour implements IShapeAction
     }
 
     
-// @Override
-    public Rectangle move(int xStep, int yStep) 
+
+    @Override
+    public Rectangle move(int xStep, int yStep)
     {
-       this.RectEditable = new Rectangle(this.SRect.x + xStep, this.SRect.y + yStep, this.SRect.width,this.SRect.height);
-       return this.RectEditable;
+        this.RectEditable = new Rectangle(this.SRect.x + xStep, this.SRect.y + yStep, this.SRect.width,this.SRect.height);
+        return this.RectEditable;
     }
 
     
-
-   
- //  @Override
+    @Override
     public void setEditable(boolean flag)
     {
-      if(!flag && this.RectEditable!=null)
+        if( !flag && this.RectEditable!=null)
         {
             this.SRect=this.RectEditable;
         }        
        this.isEditable=flag;
+      
     }
-
-   
+     
 }

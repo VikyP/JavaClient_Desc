@@ -96,12 +96,33 @@ public class SettingsConfig
      
             Element ip = (Element)doc.getElementsByTagName("IP").item(0); 
             this.IP=InetAddress.getByName(ip.getTextContent().trim());
-            // уточняем IP
-            if(!this.IP.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
-                this.IP=InetAddress.getByName(InetAddress.getLocalHost().getHostAddress());
-           
+            
             Element ip_udp = (Element)doc.getElementsByTagName("IP_UDP").item(0); 
             this.IP_UDP=InetAddress.getByName(ip_udp.getTextContent().trim());
+            
+             // уточняем IP
+            if(!this.IP.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
+            { 
+                this.IP=InetAddress.getByName(InetAddress.getLocalHost().getHostAddress());
+                byte[] mask=this.IP_UDP.getAddress();
+                byte [] newUDP=this.IP.getAddress();
+                for(int i=0; i<mask.length;i++)
+                { 
+                    System.out.println(" " +(mask[i]&0x000000FF));
+                    if (((mask[i]&0x000000FF)^0xFF)==0)
+                    {
+                       
+                        newUDP[i]=(byte) 0xFF;
+                    }                
+                }
+               this.IP_UDP=InetAddress.getByAddress(newUDP);
+               System.out.println(" this.IP_UDP   "+this.IP_UDP.getHostAddress());
+               ip.setTextContent(this.IP.getHostAddress());
+               ip_udp.setTextContent(this.IP_UDP.getHostAddress());
+               saveDoc();
+            }
+           
+           
             
             Element p_udp = (Element)doc.getElementsByTagName("PORT_UDP").item(0); 
             this.PORT_UDP=Integer.parseInt(p_udp.getTextContent());            
@@ -188,25 +209,10 @@ public class SettingsConfig
       */
     public void saveSettingsBack( Color b)
     {
-        try
-        {
-            Element back = (Element)doc.getElementsByTagName("Background").item(0);             
-            back.setTextContent(String.format( "%02X%02X%02X", b.getRed(), b.getGreen(), b.getBlue() ));
-            
-            Source domSource = new DOMSource(this.doc);
-            Result fileResult = new StreamResult(new File("Settings.xml"));
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.transform(domSource, fileResult);
-        }
-        catch (TransformerConfigurationException ex)
-        {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (TransformerException ex)
-        {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Element back = (Element)doc.getElementsByTagName("Background").item(0);             
+        back.setTextContent(String.format( "%02X%02X%02X", b.getRed(), b.getGreen(), b.getBlue() ));
+
+        saveDoc();     
     
     }
     
@@ -216,58 +222,46 @@ public class SettingsConfig
      */
     public void saveSettingsFore(Color f)
     {
-        try
-        {            
-            Element fore = (Element)doc.getElementsByTagName("Foreground").item(0); 
-            fore.setTextContent(String.format( "%02X%02X%02X", f.getRed(), f.getGreen(), f.getBlue() ));
-            Source domSource = new DOMSource(this.doc);
-            Result fileResult = new StreamResult(new File("Settings.xml"));
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.transform(domSource, fileResult);
-        }
-        catch (TransformerConfigurationException ex)
-        {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (TransformerException ex)
-        {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                   
+        Element fore = (Element)doc.getElementsByTagName("Foreground").item(0); 
+        fore.setTextContent(String.format( "%02X%02X%02X", f.getRed(), f.getGreen(), f.getBlue() ));
+        saveDoc();
     
     }
     
     public void saveBounds(Rectangle R,float scale)
     {
-        try
-        {
-            Element x = (Element)doc.getElementsByTagName("X").item(0);             
-            x.setTextContent(String.valueOf( R.x));
-            
-            Element y = (Element)doc.getElementsByTagName("Y").item(0);             
-            y.setTextContent(String.valueOf( R.y));
-            
-            Element w = (Element)doc.getElementsByTagName("Width").item(0);             
-            w.setTextContent(String.valueOf( R.width));
-            
-            Element h = (Element)doc.getElementsByTagName("Height").item(0);             
-            h.setTextContent(String.valueOf( R.height));
-            
-            Element sc = (Element)doc.getElementsByTagName("Scale").item(0);             
-            sc.setTextContent(String.valueOf( scale));
-            
+        Element x = (Element)doc.getElementsByTagName("X").item(0);             
+        x.setTextContent(String.valueOf( R.x));
+
+        Element y = (Element)doc.getElementsByTagName("Y").item(0);             
+        y.setTextContent(String.valueOf( R.y));
+
+        Element w = (Element)doc.getElementsByTagName("Width").item(0);             
+        w.setTextContent(String.valueOf( R.width));
+
+        Element h = (Element)doc.getElementsByTagName("Height").item(0);             
+        h.setTextContent(String.valueOf( R.height));
+
+        Element sc = (Element)doc.getElementsByTagName("Scale").item(0);             
+        sc.setTextContent(String.valueOf( scale));
+
+        saveDoc();
+        
+    }
+    
+    
+    public void saveDoc()
+    {
+        try {
             Source domSource = new DOMSource(this.doc);
             Result fileResult = new StreamResult(new File("Settings.xml"));
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer();
             transformer.transform(domSource, fileResult);
-        }
-        catch (TransformerConfigurationException ex)
-        {
+        } catch (TransformerConfigurationException ex) {
             Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (TransformerException ex)
-        {
+        } catch (TransformerException ex) {
             Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
     

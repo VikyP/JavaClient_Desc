@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class SRectangle extends SContour implements IShapeAction  
 {
 
-    public SRectangle(DataInputStream DIS, int type)
+    public SRectangle(DataInputStream DIS, byte type)
     {
         super(DIS, type);
         try
@@ -39,13 +39,13 @@ public class SRectangle extends SContour implements IShapeAction
         }
     
     }
-    public SRectangle(Point Begin, Point End, Color c, float s, int  t)
+    public SRectangle(Point Begin, Point End, Color c, float s, byte  t)
     {
         super(Begin, End, c, s, t);
         this.Type=ShapeType.Rectangle;
     }
     
-     public SRectangle(Point Begin, Point End, Color c, Color f, float s, int t) 
+     public SRectangle(Point Begin, Point End, Color c, Color f, float s, byte t) 
     {
         super(Begin, End, c, s, t);
         this.Filling=f;   
@@ -129,29 +129,10 @@ public class SRectangle extends SContour implements IShapeAction
     }
 
     @Override
-    public void BinaryWrite(DataOutputStream DOS)
+    public void setEditable(boolean flag) 
     {
-        super.BinaryWrite(DOS);
-        try
-        {           
-            if(this.Type==ShapeType.FillRectangle)
-                DOS.writeInt(this.Filling.getRGB());
-        }
-        catch (IOException ex) 
-        {
-            Logger.getLogger(SEllipse.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
+
     
- //   @Override
-    public void setEditable(boolean flag)
-    {
-        if( !flag && this.RectEditable!=null)
-        {
-            this.SRect=this.RectEditable;
-        }        
-       this.isEditable=flag;
-      
-    }
      
 }
