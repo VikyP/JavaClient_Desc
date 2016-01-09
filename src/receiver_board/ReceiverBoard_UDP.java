@@ -165,8 +165,7 @@ public class ReceiverBoard_UDP extends Thread
             {
             try
             {
-                type=DIS.readByte();
-                System.out.println(" ----------------------------"+type);
+                type=DIS.readByte();                
                 switch (type)
                 {
                     case ShapeType.Line:
@@ -183,8 +182,7 @@ public class ReceiverBoard_UDP extends Thread
                     case ShapeType.FillRectangle:
                          shapes.add( new SRectangle(DIS,type));
                          
-                    case ShapeType.Table:
-                        System.out.println(" ----------------------------ShapeType.Table "+ ShapeType.Table);
+                    case ShapeType.Table:                      
                          shapes.add( new STable(DIS,type));
                         break;
                 }
