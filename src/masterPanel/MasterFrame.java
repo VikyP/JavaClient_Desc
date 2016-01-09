@@ -232,7 +232,7 @@ public class MasterFrame extends JFrame {
         @Override
         public void run()
         {
-            boolean status=(Calendar.getInstance().getTimeInMillis()-MasterFrame.this.screen.timeReceive.getTimeInMillis()>1000);
+            boolean status=(Calendar.getInstance().getTimeInMillis()-MasterFrame.this.screen.timeReceive.getTimeInMillis()>1100);
             
             if(MRB.isDesc==status)
                 return;
@@ -288,8 +288,7 @@ public class MasterFrame extends JFrame {
         
         receiver.ETCh.TextChangedAdd(MRB.getEvTextChanged());
         receiver.EGrCh.GraphChangedAdd(MRB.getEvGraphChanged());
-        
-        this.checkReceiverScreeen_UDP.schedule(iconScreeen_UDP, 1000, 500);
+       
         this.setContentPane(MRB);
         MRB.BR.addMouseListener(this.mouseFrame);  
         MRB.BR.addMouseMotionListener(this.mouseMotionFrame);
@@ -439,6 +438,8 @@ public class MasterFrame extends JFrame {
         this.screen= new ReceiverScreeen_UDP(SC.PORT_TCP_ScStr);
         this.screen.EImCh.ImageChangedAdd(this.MRB.getEvNewImage());
         this.screen.start();
+        this.checkReceiverScreeen_UDP.schedule(iconScreeen_UDP, 1000, 500);
+        
         receiver.start();
     }
     

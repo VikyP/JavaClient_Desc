@@ -26,11 +26,11 @@
         <Name> Student</Name>
       <!--Расположение и размеры доски-->  
         <BoundsBoard>
-            <X>559</X>
-            <Y>-882</Y>
-            <Width>450</Width>
-            <Height>440</Height>
-	    	<Scale>0.463</Scale>
+            <X>383</X>
+            <Y>-833</Y>
+            <Width>726</Width>
+            <Height>449</Height>
+	    	<Scale>0.474</Scale>
         </BoundsBoard>
 
 	<!-- Size PreviewPane -->
