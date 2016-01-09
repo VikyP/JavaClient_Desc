@@ -5,6 +5,7 @@
  */
 package userControl;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -22,6 +23,7 @@ public class ClientToolsPanel extends JPanel
        
     public JSlider trancparency ;
     public JCheckBox isAlwaysOnTop;
+    public JSlider sizer ;
     
     public ClientToolsPanel()    
     {
@@ -36,10 +38,22 @@ public class ClientToolsPanel extends JPanel
         this.trancparency.setPaintTicks(true);
         this.add(this.trancparency);
         
+        
         this.isAlwaysOnTop = new JCheckBox("Поверх всех окон"); 
         this.isAlwaysOnTop.setSelected(true);
         this.add(this.isAlwaysOnTop);
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        JLabel l=new JLabel(" Размер");
+        l.setPreferredSize(new Dimension(100,20));
+        this.add(l);
+        this.sizer= new JSlider(); 
+        this.sizer.setValue(5);
+        this.sizer.setMaximum(10);
+        this.sizer.setMinimum(1);
+        this.sizer.setMajorTickSpacing(1);
+        this.sizer.setPaintLabels(true);
+        this.sizer.setPaintTicks(true);
+        this.add(this.sizer);
     
     }
     

@@ -71,6 +71,12 @@ public class Canvas_BoardR extends JEditorPane
     private final byte right=20;
     private final byte bottom=20;
     
+    public Dimension getMinSize(int toolsH)
+    {
+        return new Dimension((int)(width_B*0.5),toolsH+(int)(height_B*0.5));
+    
+    }
+    
     private byte line =0;
     /**
      * номер страницы полученной по UDP numberPageGet=0, если контент не
@@ -136,7 +142,7 @@ public class Canvas_BoardR extends JEditorPane
             try{
                 
                 if(fontSize != fontHeigt)
-                {
+                {                  
                     fontSize=fontHeigt;
                     Canvas_BoardR.this.F=new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
                     Canvas_BoardR.this.setFont(F);
@@ -195,22 +201,28 @@ public class Canvas_BoardR extends JEditorPane
     {
         @Override
         public void getNewGraph(byte numPage, Dimension D, ArrayList<IShapeAction> SA)
-        {/*
-            System.out.println("     numPage"+  numPage);
-            System.out.println("     D  "+  D.toString());
-            System.out.println("    Canvas_BoardR D  "+  Canvas_BoardR.this.getSize());
-            System.out.println("    scale  "+  Canvas_BoardR.this.scale);*/
+        {
             //случай, когда доска преподавателя не прорисована
             if(D.width!=0 && D.height!=0)
             {
+                boolean flag =false; 
                 if(D.width!=Canvas_BoardR.this.width_B)
+                {
                     Canvas_BoardR.this.width_B=D.width;
+                    flag= true;
+                }
                 if(D.height!=Canvas_BoardR.this.height_B)
+                {
                     Canvas_BoardR.this.height_B=D.height;
-                if(Canvas_BoardR.this.getWidth()!=Canvas_BoardR.this.width_B
-                        ||
-                        Canvas_BoardR.this.getHeight()!=Canvas_BoardR.this.height_B)
-                    Canvas_BoardR.this.setSize(width_B, height_B);
+                    
+                    flag= true;
+                }
+                if(flag)
+                {
+                  
+                    Canvas_BoardR.this.scale();
+                    System.out.println("    **********************************************");
+                }
                     
             }
            
@@ -246,11 +258,12 @@ public class Canvas_BoardR extends JEditorPane
         buffer = new BufferedImage(this.width_B, this.height_B,BufferedImage.TYPE_INT_RGB);
         getMetrics();
         getMetricsScale(F);
-        this.dimScale= D;// new Dimension((int)(this.width_B*sc), (int)(this.height_B*sc));
+        this.dimScale= D;
         this.setSize(new Dimension(this.width_B, this.height_B));
         this.setPreferredSize(new Dimension(this.width_B, this.height_B));
         this.setMinimumSize(new Dimension(200, 200));
         this.setMargin( new Insets(top, left, bottom, right));
+        
         
 
         this.setBackground(b);
@@ -342,8 +355,8 @@ public class Canvas_BoardR extends JEditorPane
         this.rowHeigthSC = (byte)metrics.getHeight();
         this.colWidthSC  = (byte)metrics.charWidth('X');
         this.rowDescentSC=(byte)metrics.getMaxDescent();
-      //  this.width_SC=this.colWidthSC*(this.colsCount+1)+(int)((this.left+this.right)*this.scale);
-       // this.height_SC=this.rowHeigth*(this.rowsCount+1)+(int)((this.top+this.bottom)*this.scale) ;
+        
+        this.setMargin( new Insets((int) (top*scale), (int) (left*scale), (int) (bottom*scale), (int) (right*scale)));
         g2d.dispose(); 
     }
    
@@ -374,6 +387,7 @@ public class Canvas_BoardR extends JEditorPane
        {
             Graphics2D g2D = (Graphics2D)g.create();
             rebuildBuffer();
+            drawContur(g2D);
             g.drawImage(buffer, 0, 0, this);
             drawLinesNumber(g2D);
             //изменяем порядок прорисовки сначала фигуры потом текст
@@ -501,10 +515,13 @@ public class Canvas_BoardR extends JEditorPane
             this.getParent().setSize(Dim_parent);
             this.getParent().setPreferredSize(Dim_parent);
         }*/
+        this.dimScale= D;
+        
+       
         this.setSize(D);
         this.setPreferredSize(D);
         this.setFont(F.deriveFont(fontSize*scale)); 
-        this.repaint();
+        
     }
    
     /**

@@ -32,7 +32,7 @@ public class ReceiverScreeen_UDP extends Thread
         this.port_UDP=port;
         this.setDaemon(true);
         this.timeReceive = Calendar.getInstance();
-        this.timeReceive.add(Calendar.SECOND, 1);
+        this.timeReceive.add(Calendar.SECOND, 2);
     }
     
     @Override 

@@ -35,6 +35,8 @@ public class ToolsPanel extends JPanel {
     public JLabel IP;
     public JLabel screenStatus;
     
+    public final static int toolsHeigth=30;
+    
     
     public ToolsPanel()
     {
@@ -47,11 +49,11 @@ public class ToolsPanel extends JPanel {
         TB.add(this.historyOn);
        
        // TB.setBackground(Color.red);
-        this.screenDesk=new JToggleButton(ImageIconURL.get("resources/desk24.png"));
-        this.screenDesk.setSelectedIcon(ImageIconURL.get("resources/_Monitor24.png"));
+      //  this.screenDesk=new JToggleButton(ImageIconURL.get("resources/desk24.png"));
+      //  this.screenDesk.setSelectedIcon(ImageIconURL.get("resources/_Monitor24.png"));
       //  this.screenDesk.setEnabled(false);
-        setButtonPaintOff(this.screenDesk);
-        TB.add(this.screenDesk);
+     //   setButtonPaintOff(this.screenDesk);
+       // TB.add(this.screenDesk);
         
         this.toolsOn= new JToggleButton(ImageIconURL.get("resources/setting24.png"));
         this.toolsOn.setSelectedIcon(ImageIconURL.get("resources/setting24_press.png"));

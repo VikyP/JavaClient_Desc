@@ -42,6 +42,7 @@ import receiver_board.ReceiverScreeen_UDP;
 import student_teamviewer.ConnectionManager;
 import userControl.ClientToolsPanel;
 import userControl.ImageIconURL;
+import userControl.ToolsPanel;
 
 /**
  *
@@ -57,8 +58,6 @@ public class MasterFrame extends JFrame {
         @Override
         public void mouseDragged(MouseEvent e)
         {
-            
-          
             //перемещение окна поэкрану мышкой
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.MOVE_CURSOR)  
                 
@@ -77,20 +76,17 @@ public class MasterFrame extends JFrame {
                 int stepX = e.getX() - MasterFrame.this.begin.x;                
                  newSize = 
                         new Dimension(MasterFrame.this.getPreferredSize().width + stepX, 
-                        MasterFrame.this.getPreferredSize().height);//+ MasterFrame.this.MRB.BR.getStepY(stepX));
+                        MasterFrame.this.getPreferredSize().height + MasterFrame.this.MRB.BR.getStepY(stepX));
                 
-                System.out.println("3    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
+              //  System.out.println("3    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
 
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
-                
-                int stepY = e.getY() - MasterFrame.this.begin.y;               
-                 newSize = new Dimension(MasterFrame.this.getPreferredSize().width,//+ MasterFrame.this.MRB.BR.getStepX(stepY), 
-                        MasterFrame.this.getPreferredSize().height + stepY);
-                
-              //  System.out.println("1   x= "+ MasterFrame.this.MRB.BR.getStepX(stepY)+"  y ="+stepY);
-                
-                return;
+                 return;
+              //  int stepY = e.getY() - MasterFrame.this.begin.y;               
+             //    newSize = new Dimension(MasterFrame.this.getPreferredSize().width + MasterFrame.this.MRB.BR.getStepX(stepY), 
+           //             MasterFrame.this.getPreferredSize().height + stepY);
+               
                 
             }
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.SE_RESIZE_CURSOR)
@@ -99,7 +95,7 @@ public class MasterFrame extends JFrame {
                 int stepY = MasterFrame.this.MRB.BR.getStepY(stepX);
                 newSize = new Dimension(MasterFrame.this.getPreferredSize().width + stepX, MasterFrame.this.getPreferredSize().height + stepY);
                
-                System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
+              //  System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
            
             MasterFrame.this.setSize(newSize);
@@ -189,7 +185,23 @@ public class MasterFrame extends JFrame {
             if(source.getValue()>90)
                 return;
             float transp = (source.getMaximum()-(float) source.getValue())/ source.getMaximum();
-            AWTUtilities.setWindowOpacity(MasterFrame.this, transp);
+           AWTUtilities.setWindowOpacity(MasterFrame.this, transp);
+        }
+    };
+    
+    /**
+     * Обработка изменения положения слайдера прозрачности
+     */
+    public ChangeListener CL_sizer = new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            
+            JSlider source = (JSlider) e.getSource();
+            if(source.getValue()>90)
+                return;
+            float transp = (source.getMaximum()-(float) source.getValue())/ source.getMaximum();
+           
         }
     };
     
@@ -206,8 +218,8 @@ public class MasterFrame extends JFrame {
     };
 
     private ClientToolsPanel tools;
-    private final int toolPanelHeight=120;
-    private final int toolPanelWidth=240;
+    private final int toolPanelHeight=180;
+    private final int toolPanelWidth=230;
     private final int toolPanelX=40;
     private MasterReceiverBoard MRB;
     private ReceiverBoard_UDP receiver;
@@ -225,26 +237,21 @@ public class MasterFrame extends JFrame {
             if(MRB.isDesc==status)
                 return;
             else
-            {
+            { 
                 MRB.isDesc=status;
                 if(MRB.isDesc)
                 { 
                     MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
-                    Dimension d= new Dimension(MasterFrame.this.MRB.BR.getWidth(), MasterFrame.this.MRB.BR.getHeight()+MRB.BR.history.getHeight());
-                    MasterFrame.this.setSize(d);
-                    MasterFrame.this.setPreferredSize(d);
-                   System.out.println("    W Frame "+MasterFrame.this.getSize().width);
-                    System.out.println("    W Canvas "+MasterFrame.this.MRB.BR.dimScale.width);
-                    
-                    
+                   
                 }
                 else
-                    MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOn.png"));
+                {
+                    MasterFrame.this.MRB.tools.screenStatus.setIcon(ImageIconURL.get("resources/signalOn.png"));                   
+                }
                 
                 
                 MasterFrame.this.MRB.setPanel(MRB.isDesc);
-                MasterFrame.this.validate();
-                MasterFrame.this.repaint();
+                MasterFrame.this.setFrameSize();
             }
         }
     };
@@ -267,13 +274,15 @@ public class MasterFrame extends JFrame {
             System.exit(0);        
         }
         this.setIconImage(ImageIconURL.get("resources/desk24.png").getImage());
-        this.setMinimumSize(new Dimension(300,300));
+        
         this.setBounds(SC.Bounds);
         this.setPreferredSize(SC.Bounds.getSize());
         this.addMouseListener(this.mouseFrame);
         this.addMouseMotionListener(this.mouseMotionFrame);
         this.receiver = new ReceiverBoard_UDP(SC.PORT_UDP_BOARD);
         this.MRB = new MasterReceiverBoard(SC);
+        
+        
         this.setBackground(SC.Background);
         ConnectionManager SenderPrScr = new ConnectionManager(SC);
         
@@ -282,8 +291,7 @@ public class MasterFrame extends JFrame {
         
         this.checkReceiverScreeen_UDP.schedule(iconScreeen_UDP, 1000, 500);
         this.setContentPane(MRB);
-        MRB.BR.addMouseListener(this.mouseFrame);
-        
+        MRB.BR.addMouseListener(this.mouseFrame);  
         MRB.BR.addMouseMotionListener(this.mouseMotionFrame);
         MRB.tools.historyOn.addActionListener(new ActionListener(){
 
@@ -313,6 +321,7 @@ public class MasterFrame extends JFrame {
         this.tools.setBounds(toolPanelX, MRB.getHeightToolBar(), toolPanelWidth, toolPanelHeight);
         this.tools.trancparency.addChangeListener(CL_transparency);
         this.tools.isAlwaysOnTop.addItemListener(CL_topAll);
+        this.tools.sizer.addChangeListener(CL_sizer);
     
         JLayeredPane lp = getLayeredPane();
         lp.add(this.tools, JLayeredPane.POPUP_LAYER);
@@ -337,8 +346,7 @@ public class MasterFrame extends JFrame {
             @Override
             public void componentResized(ComponentEvent e)
             {
-                if(!MasterFrame.this.MRB.isDesc)
-                       MasterFrame.this.MRB.TP.UpdateSize();
+               setNewSizeCanvas();              
             }
 
             @Override
@@ -347,8 +355,10 @@ public class MasterFrame extends JFrame {
             }
 
             @Override
-            public void componentShown(ComponentEvent e) {
-               // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            public void componentShown(ComponentEvent e)
+            {
+               MasterFrame.this.setMinimumSize(MasterFrame.this.MRB.BR.getMinSize(ToolsPanel.toolsHeigth));
+               setNewSizeCanvas();
             }
 
             @Override
@@ -390,11 +400,12 @@ public class MasterFrame extends JFrame {
                    {                     
                        MasterFrame.this.setExtendedState(JFrame.NORMAL);
                        btn.setToolTipText("Развернуть");                    
-                   } 
+                   }
                    
-                
-                 
+                   setNewSizeCanvas();
                }
+          
+            
           });
         
         
@@ -408,10 +419,11 @@ public class MasterFrame extends JFrame {
                 SC.saveBounds(MasterFrame.this.getBounds(),MRB.BR.getScale());
                 System.exit(0);
             }
+            
 
         }
         );
-        
+        setFrameSize();
         // прозрачность
         try
         {
@@ -438,6 +450,21 @@ public class MasterFrame extends JFrame {
             this.MRB.BR.scale();
         else
             this.MRB.TP.UpdateSize();
+    }
+    
+    private void setFrameSize()
+    {
+        Dimension d= new Dimension(800, 600);
+        if(MRB.isDesc)
+                { 
+                    d= new Dimension(MasterFrame.this.MRB.BR.dimScale.width,MasterFrame.this.MRB.BR.dimScale.height+MRB.tools.getHeight());                   
+                }
+                else
+                {
+                    d= new Dimension(MasterFrame.this.MRB.TP.imgD.width, MasterFrame.this.MRB.TP.imgD.height+MRB.tools.getHeight());
+                }
+        this.setSize(d);
+        this.setPreferredSize(d);
     }
 
 }
