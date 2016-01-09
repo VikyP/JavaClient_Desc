@@ -34,11 +34,11 @@ import masterPanel.ReportException;
  *
  * @author viky
  */
-class TeacherPane extends JComponent
+public class TeacherPane extends JComponent
 {
     public BufferedImage BI;    
     public BufferedImage BI_Row;
-    private boolean isSelected;
+  
     private Dimension DImg;
     private Dimension DImgReal;
     private int scale_point=1;
@@ -86,57 +86,28 @@ class TeacherPane extends JComponent
        this.BI= new BufferedImage(this.DImg.width,this.DImg.height, BufferedImage.TYPE_INT_ARGB); 
        this.BI_Row= new BufferedImage(this.DImg.width,this.DImg.height, BufferedImage.TYPE_INT_ARGB);
        
-       this.isSelected= false;
        this.setPreferredSize(this.PaneSize);
       
     }
     
-    public void setSelected( boolean s)
-    {
-        isSelected=s;
-    }
-    
-    
-    public boolean getSelect()
-      {
-          return this.isSelected;
-      }
    
     
     @Override
     public void paintComponent(Graphics g)
     { 
-      
-        if(this.isSelected)
-            g.setColor(new Color (155,155,200));
-        else
-            g.setColor(new Color (105,105,180));
+        g.setColor(new Color (155,155,200));
         
         g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(),5,5);   
         
         if(this.BI== null)return;
        
-       // g.drawImage(this.BI, 20, 20,this.getWidth()-20*2,this.getHeight()-20*3, this);
-        Point start= new Point((this.getWidth()-this.BI.getWidth())/2, (this.getHeight()-this.BI.getHeight())/2-20 );
-       // g.drawImage(this.BI, start.x, start.y,this.BI.getWidth(),this.BI.getHeight(), this);
-        
         Graphics2D g2D = (Graphics2D) g.create();        
         g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2D.drawImage(this.BI,5,5,this.getWidth()-10,this.getHeight()-10,this);
-        
-      //  g2D.drawImage(this.BI, this.p.x, this.p.y,this.imgD.width, this.imgD.height, this);
+        g2D.drawImage(this.BI,0,0,this.getWidth()-10,this.getHeight()-10,this);
         g2D.dispose();
     
     }
     
-    public void drawCenter(String s, int w, int h, Graphics g)    
-    {
-        FontMetrics fm= g.getFontMetrics();
-        int x = (w-fm.stringWidth(s))/2;
-        int y =h-fm.getAscent()/2;
-        g.drawString(s, x, y);
-    }
-        
     public  void UnPackFast( DataInputStream DIS ) 
     {
          
@@ -147,6 +118,7 @@ class TeacherPane extends JComponent
             if(this.DImgReal.width!=w ||this.DImgReal.height!=h)
             {
                 this.DImgReal= new Dimension(w,h);
+                UpdateSize();
             }           
            int WF= DIS.readInt();
            int HF=DIS.readInt();
@@ -208,6 +180,11 @@ class TeacherPane extends JComponent
           
             int W=DIS.readInt();   
             int H=DIS.readInt();
+            if(this.DImgReal.width!=W ||this.DImgReal.height!=H)
+            {
+                this.DImgReal= new Dimension(W,H);
+                UpdateSize();
+            }     
             
             int startRow= DIS.readInt();
             int stopRow=DIS.readInt();            
@@ -220,7 +197,6 @@ class TeacherPane extends JComponent
             if((this.BI_Row.getWidth()!=W)||(this.BI_Row.getHeight()!=h))
             {
                 this.BI_Row= new BufferedImage(W,h, BufferedImage.TYPE_INT_RGB);
-                System.out.println("    W " +(this.BI_Row.getWidth()+"  H "+this.BI_Row.getWidth()));
             }             
             WritableRaster WR_Row = this.BI_Row.getRaster();      
             DataBuffer DB_Row = WR_Row.getDataBuffer();
@@ -330,35 +306,29 @@ class TeacherPane extends JComponent
     }
     
     
-    private void UpdateSize()
+    public void UpdateSize()
     {
-        int w= this.getParent().getWidth();
-        int h =this.getParent().getHeight(); 
-        
-       // System.out.println("scaleH  =" + w + "    ="+h);   
-        this.setPreferredSize(new Dimension(w,h));
-        
+        int w= this.getParent().getParent().getWidth();
+        int h =this.getParent().getParent().getHeight(); 
         int scaleW=(w*1000)/this.DImgReal.width;
-       // System.out.println("scaleW  = " + scaleW);   
-                 
         int scaleH=(h*1000)/this.DImgReal.height;
          
         if(scaleW<scaleH)
         {  
             this.scale_point=w*1000/this.DImgReal.width;
             this.imgD=new Dimension(w,this.scale_point*this.DImgReal.height/1000);
-            this.p.x=0;
-            this.p.y=(h-this.DImgReal.height)/2;
+            
         }
         else
         {
           //  System.out.println(scaleH*this.bi.getHeight());
             this.scale_point=h*1000/this.DImgReal.height;
             this.imgD=new Dimension(this.DImgReal.width*this.scale_point/1000,h);
-            this.p.x= (w-this.DImgReal.width)/2;
-            this.p.y=0;
+           
         }
-    
+        this.setSize(imgD);
+        this.setPreferredSize(imgD);
+        this.getParent().setSize(imgD);
     
     }
     
