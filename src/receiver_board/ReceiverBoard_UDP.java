@@ -57,11 +57,8 @@ public class ReceiverBoard_UDP extends Thread
     
     @Override 
     public synchronized void run()
-    {
-        
-        try
+    {  try
         {
-            
             DatagramSocket  DS  = new DatagramSocket (this.port_UDP_Board);           
             byte[] byte_info= new byte [32768] ;
             DatagramPacket info= new DatagramPacket (byte_info, 0, byte_info.length);
@@ -82,7 +79,7 @@ public class ReceiverBoard_UDP extends Thread
                 }
                if(isReceive)
                {
-                   
+                
                 ByteArrayInputStream BAIS= new ByteArrayInputStream(info.getData()); 
                 
                 DataInputStream DIS= new DataInputStream(BAIS);

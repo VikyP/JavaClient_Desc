@@ -1675,3 +1675,645 @@ StudentPane.UnPackImage()  Exception	56244
 StudentPane.UnPackImage()  Exception	941150		
 StudentPane.UnPackImage()  Exception	612988		
 StudentPane.UnPackImage()  Exception	612988		
+Sender_UDP.Send(..)!!!!!!!!!!!!Address already in use: JVM_Bind		
+null		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+98		
+Index: 1, Size: 1		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+Index: 2, Size: 1		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+negative width		
+Index: 3, Size: 1		
+Index: 3, Size: 1		

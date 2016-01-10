@@ -358,6 +358,7 @@ public class MasterFrame extends JFrame {
             {
                MasterFrame.this.setMinimumSize(MasterFrame.this.MRB.BR.getMinSize(ToolsPanel.toolsHeigth));
                setNewSizeCanvas();
+               setFrameSize();
             }
 
             @Override
@@ -451,6 +452,7 @@ public class MasterFrame extends JFrame {
             this.MRB.BR.scale();
         else
             this.MRB.TP.UpdateSize();
+        
     }
     
     private void setFrameSize()
@@ -464,8 +466,11 @@ public class MasterFrame extends JFrame {
                 {
                     d= new Dimension(MasterFrame.this.MRB.TP.imgD.width, MasterFrame.this.MRB.TP.imgD.height+MRB.tools.getHeight());
                 }
-        this.setSize(d);
-        this.setPreferredSize(d);
+        if(!d.equals(this.getPreferredSize()))
+        {
+            this.setSize(d);
+            this.setPreferredSize(d);
+        }
     }
 
 }

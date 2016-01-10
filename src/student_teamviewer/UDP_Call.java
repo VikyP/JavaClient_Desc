@@ -83,7 +83,7 @@ public class UDP_Call extends Thread
             DatagramPacket DP= new DatagramPacket(
                     a, a.length, IP_UDP, this.port);
             
-            System.out.println( msg);
+           // System.out.println( msg);
         
             this.DS.send(DP);
         }
