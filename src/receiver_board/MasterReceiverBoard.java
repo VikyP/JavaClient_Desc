@@ -64,6 +64,7 @@ public class MasterReceiverBoard extends JPanel {
 
     public MasterReceiverBoard(final SettingsConfig SC) 
     {
+        this.colorChooser= new JColorChooser();
         
         Border raisedbevel = BorderFactory.createRaisedBevelBorder();
         Border loweredbevel = BorderFactory.createLoweredBevelBorder();
@@ -72,7 +73,7 @@ public class MasterReceiverBoard extends JPanel {
         this.setLayout(new BorderLayout());
         
         //<editor-fold defaultstate="collapsed" desc="Формирование панели инструментов ">
-        this.colorChooser= new JColorChooser();
+       
        
         this.tools = new ToolsPanel();
         this.tools.IP.setText( " IP "+SC.IP.getHostAddress());
@@ -84,7 +85,7 @@ public class MasterReceiverBoard extends JPanel {
             {
                 // прячем панель, если она открыта
                 hidePanel();
-                colorChooser.setColor(basePanel.getForeground());
+               MasterReceiverBoard.this.colorChooser.setColor(BR.getForeground());
                 JColorChooser.createDialog(MasterReceiverBoard.this.tools.forecolor,
                     "Новый цвет текста", true, colorChooser,
                     new ActionListener() 
@@ -108,7 +109,7 @@ public class MasterReceiverBoard extends JPanel {
             {
                 // прячем панель, если она открыта
                 hidePanel();
-                colorChooser.setColor(basePanel.getBackground()); 
+                colorChooser.setColor(BR.getBackground()); 
                 JColorChooser.createDialog(MasterReceiverBoard.this.tools.backcolor,
                     "Новый цвет фона", true, colorChooser,
                     new ActionListener() 
@@ -161,17 +162,9 @@ public class MasterReceiverBoard extends JPanel {
         //</editor-fold>   
        
         this.setOpaque(false);
-       // this.basePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        //this.basePanel = new JPanel(new BorderLayout());
-       // this.basePanel.setOpaque(false);
-       // this.basePanel.setLayout(new BoxLayout(this.basePanel,BoxLayout.X_AXIS));
-      //  this.basePanel.setPreferredSize(new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight()));
         scrollPane= new JScrollPane();
-       // scrollPane.setOpaque(false);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-      
-        //this.setMargin( new Insets(0,0, 0,0));
         Dimension pane =new Dimension(SC.Bounds.width, SC.Bounds.height-this.tools.getHeight());
         TP= new TeacherPane(); 
         TP.setPreferredSize(pane);

@@ -49,7 +49,8 @@ public class TeacherPane extends JComponent
 
         @Override
         public void getNewImage(DataInputStream dis, byte typeImage)
-        {
+        { 
+           
             if(dis==null)
             {
             TeacherPane.this.BI= new BufferedImage(
@@ -58,6 +59,7 @@ public class TeacherPane extends JComponent
             else                
             switch(typeImage)  
             {
+               
                 case TypeImageSend.Fast:
                 TeacherPane.this.UnPackFast(dis);
                 break;
@@ -122,8 +124,7 @@ public class TeacherPane extends JComponent
            int WF= DIS.readInt();
            int HF=DIS.readInt();
             synchronized(this.BI)
-            {
-               
+            {               
                 if((this.BI.getWidth()!=WF)||(this.BI.getHeight()!=HF))
                 {
                    this.BI= new BufferedImage(WF, HF, BufferedImage.TYPE_INT_RGB);  
@@ -160,7 +161,6 @@ public class TeacherPane extends JComponent
    
     public void testImage(BufferedImage BI, String name)
     {
-
         try
         {
             File F = new File(name + ".png");
@@ -169,6 +169,7 @@ public class TeacherPane extends JComponent
         } catch (IOException ex)
         {
             Logger.getLogger(TeacherPane.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write("StudentPane.UnPackPrewiew()"+ex.getMessage());
         }
 
     }

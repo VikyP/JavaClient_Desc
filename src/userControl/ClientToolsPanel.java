@@ -23,7 +23,7 @@ public class ClientToolsPanel extends JPanel
        
     public JSlider trancparency ;
     public JCheckBox isAlwaysOnTop;
-    public JSlider sizer ;
+   // public JSlider sizer ;
     
     public ClientToolsPanel()    
     {
@@ -43,7 +43,7 @@ public class ClientToolsPanel extends JPanel
         this.isAlwaysOnTop.setSelected(true);
         this.add(this.isAlwaysOnTop);
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-        JLabel l=new JLabel(" Размер");
+    /*    JLabel l=new JLabel(" Размер");
         l.setPreferredSize(new Dimension(100,20));
         this.add(l);
         this.sizer= new JSlider(); 
@@ -53,7 +53,7 @@ public class ClientToolsPanel extends JPanel
         this.sizer.setMajorTickSpacing(1);
         this.sizer.setPaintLabels(true);
         this.sizer.setPaintTicks(true);
-        this.add(this.sizer);
+        this.add(this.sizer);*/
     
     }
     

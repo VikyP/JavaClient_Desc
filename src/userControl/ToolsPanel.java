@@ -81,10 +81,10 @@ public class ToolsPanel extends JPanel {
         this.IP.setHorizontalAlignment(SwingConstants.CENTER);
        
         this.screenStatus=new JLabel();
-        this.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
+      //  this.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
         JPanel TBWin= new JPanel();
         
-        panelStatus.add(this.screenStatus);
+     //   panelStatus.add(this.screenStatus);
         panelStatus.add(this.IP);
         this.minsize= new JButton(ImageIconURL.get("resources/minsize16.png"));
         this.minsize.setToolTipText("Свернуть");

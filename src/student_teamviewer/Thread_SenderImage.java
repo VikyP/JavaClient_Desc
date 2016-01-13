@@ -75,7 +75,7 @@ class Thread_SenderImage extends Thread
                 }
                 else
                 { 
-                    System.out.println("Send Null"); 
+                  //  System.out.println("Send Null"); 
                     client.getOutputStream().write("Null".getBytes());
                 }
                

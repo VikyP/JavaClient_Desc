@@ -52,7 +52,7 @@ public class TCP_ReceiverCommand extends Thread
     @Override
     public void run()
     {
-        System.out.println(this.clientCommand.getInetAddress().toString());
+       // System.out.println(this.clientCommand.getInetAddress().toString());
 
         byte[] buffer;
         ByteArrayOutputStream BAOS = new ByteArrayOutputStream();

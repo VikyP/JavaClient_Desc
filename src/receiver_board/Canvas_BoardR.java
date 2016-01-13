@@ -48,7 +48,6 @@ public class Canvas_BoardR extends JEditorPane
     private int height_B = 620;
     private byte fontSize = 16;
     private Font F = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
-  //  private int fontHeight=0;
     
     private byte rowHeigth=0;
     private byte rowHeigthSC=0;
@@ -103,15 +102,13 @@ public class Canvas_BoardR extends JEditorPane
          if(this.getHeight()==0 || this.getWidth()==0)
              return 0;
          int y =(this.getWidth()+stepX)*this.getHeight()/this.getWidth()-this.getHeight();
-           System.out.println(" Y "+ y);      
         return y;
      }
      public int getStepX(int stepY)
      {
          if(this.getHeight()==0 || this.getWidth()==0)
              return 0;
-        int x =(stepY+this.getHeight())*this.getWidth()/this.getHeight()-this.getWidth();
-           System.out.println("xxxxxxxxxxxxxxxxxxxxxx X "+ x);      
+        int x =(stepY+this.getHeight())*this.getWidth()/this.getHeight()-this.getWidth();             
         return x;
      }
 
@@ -203,7 +200,7 @@ public class Canvas_BoardR extends JEditorPane
         @Override
         public void getNewGraph(byte numPage, Dimension D, ArrayList<IShapeAction> SA)
         {
-             System.out.println("    Dimension  " + D);
+            // System.out.println("    Dimension  " + D);
             //случай, когда доска преподавателя не прорисована
             if(D.width==0 || D.height==0)
                 return;
@@ -243,8 +240,7 @@ public class Canvas_BoardR extends JEditorPane
 
             //номер доски отрицательный( транслируется доска не текущей даты)
             //положительный сохраняем в историю             
-            Canvas_BoardR.this.pagesUpdate(numberPageGet, SA);
-            System.out.println("  Canvas_BoardR.this.repaint();  ");
+            Canvas_BoardR.this.pagesUpdate(numberPageGet, SA);           
             Canvas_BoardR.this.repaint();
         }
 
@@ -332,14 +328,17 @@ public class Canvas_BoardR extends JEditorPane
         Graphics2D g2d= (Graphics2D)buffer.createGraphics();
         g2d.setFont(this.F);
         FontMetrics metrics = g2d.getFontMetrics(this.F);
+      //  System.out.println("    F "+ F.getSize());
         this.rowHeigth= (byte)metrics.getHeight();
-        System.out.println(" this.rowHeigth   "+this.rowHeigth);
+     //   System.out.println(" this.rowHeigth   "+this.rowHeigth);
         this.colWidth = (byte)metrics.charWidth('X');
+     //   System.out.println("   this.colWidth" + this.colWidth);
         this.rowDescent= (byte)metrics.getMaxDescent();
         this.width_B=this.colWidth*(this.colsCount+1)+this.left+this.right;
         this.height_B=this.rowHeigth*(this.rowsCount+1)+this.top+this.bottom ;
         g2d.dispose();        
         buffer = new BufferedImage(this.width_B, this.height_B,BufferedImage.TYPE_INT_RGB);
+       // System.out.println("   this.width_B  "+ this.width_B);
         
        
     }
@@ -355,7 +354,10 @@ public class Canvas_BoardR extends JEditorPane
         FontMetrics metrics = g2d.getFontMetrics(f);
         this.rowHeigthSC = (byte)metrics.getHeight();
         this.colWidthSC  = (byte)metrics.charWidth('X');
+      //  System.out.println("    this.colWidthSC "+ this.colWidthSC);
         this.rowDescentSC=(byte)metrics.getMaxDescent();
+        
+     //   System.out.println("    w scale " + (this.colWidthSC*(this.colsCount+1)+(int) (left*scale)+(int) (right*scale) ));
         
         this.setMargin( new Insets((int) (top*scale), (int) (left*scale), (int) (bottom*scale), (int) (right*scale)));
         g2d.dispose(); 

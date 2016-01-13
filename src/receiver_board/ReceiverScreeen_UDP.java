@@ -50,6 +50,7 @@ public class ReceiverScreeen_UDP extends Thread
                 try{
                 
                 DS.receive(info);
+                ReportException.write("Receiver_UDP.run() receive");
                 ByteArrayInputStream BAIS= new ByteArrayInputStream(info.getData());                
                 DataInputStream DIS= new DataInputStream(BAIS);
                 
@@ -61,6 +62,7 @@ public class ReceiverScreeen_UDP extends Thread
                 
                // System.out.println(" is Record " + isRecord+this.timeReceive.getTime().toString());
                 int length=(int)DIS.readByte();
+                ReportException.write("Receiver_UDP.run() receive L"+length);
                 char[] name_gr= new char[length];
                 for(int i=0;i<length;i++)
                 {

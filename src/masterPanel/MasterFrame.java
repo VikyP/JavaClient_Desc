@@ -77,16 +77,14 @@ public class MasterFrame extends JFrame {
                  newSize = 
                         new Dimension(MasterFrame.this.getPreferredSize().width + stepX, 
                         MasterFrame.this.getPreferredSize().height + MasterFrame.this.MRB.BR.getStepY(stepX));
-                
-              //  System.out.println("3    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
 
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
-                 return;
-              //  int stepY = e.getY() - MasterFrame.this.begin.y;               
-             //    newSize = new Dimension(MasterFrame.this.getPreferredSize().width + MasterFrame.this.MRB.BR.getStepX(stepY), 
-           //             MasterFrame.this.getPreferredSize().height + stepY);
-               
+                // return;
+                int stepY = e.getY() - MasterFrame.this.begin.y;               
+                 newSize = new Dimension(MasterFrame.this.getPreferredSize().width + MasterFrame.this.MRB.BR.getStepX(stepY), 
+                     MasterFrame.this.getPreferredSize().height + stepY);
+              
                 
             }
             if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.SE_RESIZE_CURSOR)
@@ -97,8 +95,8 @@ public class MasterFrame extends JFrame {
                
               //  System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
-           
-            MasterFrame.this.setSize(newSize);
+         //  MasterFrame.this.MRB.BR.dimScale=newSize;
+           MasterFrame.this.setSize(newSize);
             setNewSizeCanvas();
 
         }
@@ -107,20 +105,27 @@ public class MasterFrame extends JFrame {
         public void mouseMoved(MouseEvent e)
         { 
             
-            int delta = 10;
-            if ( (MasterFrame.this.getX() + MasterFrame.this.getWidth()-e.getXOnScreen()) < delta) {
-                if ((MasterFrame.this.getY() + MasterFrame.this.getHeight()-e.getYOnScreen()) < delta) {
+            int delta = 20;
+            if ( (MasterFrame.this.getX() + MasterFrame.this.getWidth()-e.getXOnScreen()) < delta)
+            {
+                if ((MasterFrame.this.getY() + MasterFrame.this.getHeight()-e.getYOnScreen()) < delta) 
+                {
                     MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.SE_RESIZE_CURSOR));
+                  // MasterFrame.this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.SE_RESIZE_CURSOR));
                     return;
-                } else {
+                }
+                else 
+                {
                     MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.E_RESIZE_CURSOR));
+                 //   MasterFrame.this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.E_RESIZE_CURSOR));
                     return;
                 }
             }
             if (( (MasterFrame.this.getY() + MasterFrame.this.getHeight())-e.getYOnScreen()) < delta) {
                 MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.N_RESIZE_CURSOR));
-                return;
-            } else {
+            }
+            else
+            {
                 MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
 
@@ -218,7 +223,7 @@ public class MasterFrame extends JFrame {
     };
 
     private ClientToolsPanel tools;
-    private final int toolPanelHeight=180;
+    private final int toolPanelHeight=140;
     private final int toolPanelWidth=230;
     private final int toolPanelX=40;
     private MasterReceiverBoard MRB;
@@ -320,7 +325,7 @@ public class MasterFrame extends JFrame {
         this.tools.setBounds(toolPanelX, MRB.getHeightToolBar(), toolPanelWidth, toolPanelHeight);
         this.tools.trancparency.addChangeListener(CL_transparency);
         this.tools.isAlwaysOnTop.addItemListener(CL_topAll);
-        this.tools.sizer.addChangeListener(CL_sizer);
+     //   this.tools.sizer.addChangeListener(CL_sizer);
     
         JLayeredPane lp = getLayeredPane();
         lp.add(this.tools, JLayeredPane.POPUP_LAYER);
@@ -379,6 +384,7 @@ public class MasterFrame extends JFrame {
         //сворачивание окна
         MRB.setEventMinSize(new ActionListener() 
         {
+            @Override
             public void actionPerformed(ActionEvent e)
                {
                     MasterFrame.this.setState(JFrame.ICONIFIED);                                        
@@ -388,13 +394,14 @@ public class MasterFrame extends JFrame {
         //разворачивание окна
         MRB.setEventMaxSize(new ActionListener() 
         {
+            @Override
             public void actionPerformed(ActionEvent e)
                {
                    JToggleButton btn= (JToggleButton)e.getSource();
                    if(btn.isSelected())
                    {
                        MasterFrame.this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                       btn.setToolTipText("Свернуть в окно");                       
+                       btn.setToolTipText("Свернуть в окно");                        
                    } 
                    else
                    {                     
@@ -444,7 +451,6 @@ public class MasterFrame extends JFrame {
         receiver.start();
     }
     
-   
     
     private void setNewSizeCanvas()
     { 
@@ -452,7 +458,6 @@ public class MasterFrame extends JFrame {
             this.MRB.BR.scale();
         else
             this.MRB.TP.UpdateSize();
-        
     }
     
     private void setFrameSize()

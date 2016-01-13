@@ -245,7 +245,7 @@ public class ScreenProperties
         if(this.basePictureBuffer.getHeight()!=this.newPictureBuffer.getHeight() ||
            this.basePictureBuffer.getWidth()!=this.newPictureBuffer.getWidth())
         {
-            System.out.println("Error  getChanges()");
+          //  System.out.println("Error  getChanges()");
             NewSize(msg);
             getBlocksCount();
         }

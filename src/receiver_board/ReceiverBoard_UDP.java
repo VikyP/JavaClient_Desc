@@ -74,7 +74,7 @@ public class ReceiverBoard_UDP extends Thread
                 catch(Exception se)
                 {
                     ReportException.write("Receiver_UDP.run() receive()"+se.getMessage());
-                    System.out.println( " ReceiverBoard_UDP receive() : udp" + se.getMessage());
+                  //  System.out.println( " ReceiverBoard_UDP receive() : udp" + se.getMessage());
                     isReceive=false;
                 }
                if(isReceive)

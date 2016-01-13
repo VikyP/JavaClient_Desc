@@ -116,7 +116,7 @@ public class SettingsConfig
                     }                
                 }
                this.IP_UDP=InetAddress.getByAddress(newUDP);
-               System.out.println(" this.IP_UDP   "+this.IP_UDP.getHostAddress());
+             //  System.out.println(" this.IP_UDP   "+this.IP_UDP.getHostAddress());
                ip.setTextContent(this.IP.getHostAddress());
                ip_udp.setTextContent(this.IP_UDP.getHostAddress());
                saveDoc();
@@ -133,7 +133,7 @@ public class SettingsConfig
             this.PORT_TCP_ScStr=this.PORT_UDP+4;
            //</editor-fold> 
             
-            System.out.println("    this.IP"+this.IP);
+          //  System.out.println("    this.IP"+this.IP);
             Element wPrView = (Element)doc.getElementsByTagName("WidthPreview").item(0);
             this.width=Integer.parseInt(wPrView.getTextContent()); 
             

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><application>
 <Configuration>
     <!-- IP адресс компьтера студента  -->
-        <IP>192.168.0.104</IP>
+        <IP>192.168.0.100</IP>
 
     <!-- Broad Cast IP UDP  -->
         <IP_UDP>192.168.0.255</IP_UDP>
 
     <!--  UDP порт для маяка-->
-        <PORT_UDP>9800</PORT_UDP>
+        <PORT_UDP>9600</PORT_UDP>
         
     <!--UDP порт приема данных доски  + 1 -->
     <!--PORT_UDP_BOARD>9801</PORT_UDP_BOARD-->
@@ -26,11 +26,11 @@
         <Name> Student</Name>
       <!--Расположение и размеры доски-->  
         <BoundsBoard>
-            <X>691</X>
-            <Y>-825</Y>
-            <Width>548</Width>
-            <Height>487</Height>
-	    	<Scale>0.519</Scale>
+            <X>338</X>
+            <Y>-835</Y>
+            <Width>633</Width>
+            <Height>572</Height>
+	    	<Scale>0.559</Scale>
         </BoundsBoard>
 
 	<!-- Size PreviewPane -->
@@ -38,9 +38,9 @@
       
 	<Colors>
 		<!--Цвет фона-->
-		<Background>999999</Background>
+		<Background>FFFF99</Background>
         <!--Цвет текста-->
-		<Foreground>000099</Foreground>
+		<Foreground>006666</Foreground>
 	</Colors>
         
         
