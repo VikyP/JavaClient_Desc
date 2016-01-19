@@ -177,15 +177,17 @@ public class ReceiverBoard_UDP extends Thread
                         shapes.add(new SEllipse(DIS,type));
                         break;
                     case ShapeType.Rectangle:
-                    case ShapeType.FillRectangle:
-                         shapes.add( new SRectangle(DIS,type));
-                         
+                    case ShapeType.FillRectangle:                        
+                        shapes.add( new SRectangle(DIS,type));
+                        break; 
+                        
                     case ShapeType.Table:                      
-                         shapes.add( new STable(DIS,type));
+                        shapes.add( new STable(DIS,type));
                         break;
                 }
             } catch (IOException ex)
             {
+                System.out.println("    Exc ");
                 Logger.getLogger(ReceiverBoard_UDP.class.getName()).log(Level.SEVERE, null, ex);
             }
             }

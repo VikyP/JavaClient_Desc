@@ -400,8 +400,7 @@ public class Canvas_BoardR extends JEditorPane
        }
        catch(Exception exc)
        {
-           System.out.println(" Canvas_BoardR   Dimension  " +this.getWidth());    
-
+           System.out.println(" Canvas_BoardR   Dimension  " +this.getWidth()); 
            System.out.println(" Exception !!!" +exc.getMessage());
            ReportException.write(exc.getMessage());
        }

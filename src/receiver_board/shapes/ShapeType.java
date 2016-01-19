@@ -10,16 +10,17 @@ package receiver_board.shapes;
  * @author 06585
  */
 public class ShapeType
-{
-    public static final int Line=1;
-    public static final int LineHorizontal=2;
-    public static final int LineVertical=3;
-    public static final int PenLine=4;
-    public static final int Ellipse=5;
-    public static final int FillEllipse=6;
-    public static final int Rectangle=10;  
-    public static final int FillRectangle=11;  
-    public static final int Table=20;
+{   
+    public static final byte None=-1;
+    public static final byte Line=0;
+    public static final byte LineHorizontal=1;
+    public static final byte LineVertical=2;
+    public static final byte PenLine=3;
+    public static final byte Ellipse=4;
+    public static final byte FillEllipse=5;
+    public static final byte Rectangle=6;  
+    public static final byte FillRectangle=7;  
+    public static final byte Table=8;
     
     public static class LineCl implements IShapeModel
     {
