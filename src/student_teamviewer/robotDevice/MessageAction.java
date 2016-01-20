@@ -25,13 +25,12 @@ public class MessageAction
 {
     
     private byte action=-1;
-    private byte size=-1;
+ //   private byte size=-1;
     
     private int KM_code=-1;
     
     private int X=-1 ;
     private int Y=-1;
-    private boolean isShift=false;
    
     public   MessageAction ()
     {
@@ -41,7 +40,7 @@ public class MessageAction
     {
      this.action=act;
      this.KM_code=kc;
-     this.size=(byte)Byte.SIZE/Byte.SIZE+(byte)Byte.SIZE/Byte.SIZE+(byte)Integer.SIZE/Byte.SIZE;
+   //  this.size=(byte)Byte.SIZE/Byte.SIZE+(byte)Byte.SIZE/Byte.SIZE+(byte)Integer.SIZE/Byte.SIZE;
     //  this.size=(byte)Byte.BYTES+(byte)Byte.BYTES+(byte)Integer.BYTES;
     // size + actiontype + key_code
     }
@@ -51,17 +50,17 @@ public class MessageAction
      this.action=at;
      this.X=x;
      this.Y=y;
-     this.size=(byte)Byte.SIZE/Byte.SIZE +    (byte)Byte.SIZE/Byte.SIZE+    (byte)Integer.SIZE/ Byte.SIZE+   (byte)Integer.SIZE/Byte.SIZE;
+    // this.size=(byte)Byte.SIZE/Byte.SIZE +    (byte)Byte.SIZE/Byte.SIZE+    (byte)Integer.SIZE/ Byte.SIZE+   (byte)Integer.SIZE/Byte.SIZE;
     // this.size=(byte)Byte.BYTES +    (byte)Byte.BYTES +    (byte)Integer.BYTES +   (byte)Integer.BYTES;
     // size + actiontype  x+y;
     }
     
     
-    public MessageAction(DataInputStream DIS, byte s)
+    public MessageAction(DataInputStream DIS)
     {
         try
         {
-            this.size =s;
+          //  this.size =s;
             this.action=DIS.readByte();
             if(this.action!=ActionType.Mouse_Move)
             {

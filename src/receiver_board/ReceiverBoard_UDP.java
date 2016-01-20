@@ -74,7 +74,6 @@ public class ReceiverBoard_UDP extends Thread
                 catch(Exception se)
                 {
                     ReportException.write("Receiver_UDP.run() receive()"+se.getMessage());
-                  //  System.out.println( " ReceiverBoard_UDP receive() : udp" + se.getMessage());
                     isReceive=false;
                 }
                if(isReceive)
@@ -134,7 +133,6 @@ public class ReceiverBoard_UDP extends Thread
         {
             ReportException.write("Receiver_UDP.run()"+se.getMessage());
             System.out.println( " ReceiverBoard_UDP SocketException #1 : udp" + se.getMessage());
-                    
         }
     }
     

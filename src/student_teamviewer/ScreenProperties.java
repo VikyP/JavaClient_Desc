@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import masterPanel.Receiver_Board;
+import receiver_board.ReceiverScreeen_UDP;
 
 /**
  *
@@ -127,17 +128,16 @@ public class ScreenProperties
     
     // размер изображения в зависимости от
     // типа передачи данных ( Full  || Preview)
-    public void NewSize( String msg )
+    public void NewSize( byte typeView)
     {
         Dimension D =new Dimension();
         
-        switch(msg)
+        switch(typeView)
         {
-            case "FULL":// экран 1:1
+            case ScreenTiles.FULL:// экран 1:1
                 D=getDimensionPrScr();                
                 break;
-                // предпросмотр
-            case "PREVIEW":
+            case ScreenTiles.PREVIEW:// предпросмотр
                 D=this.dSmall;
                 break;  
             default:  break;
@@ -182,45 +182,6 @@ public class ScreenProperties
 
     }
     
-    //определение размеров панели предпросмотра
-    //заданы в файле конфигурации
-    public void setDimentionSmall()
-    {
-        InputStream IS = null;
-        try
-        {
-            Properties property = new Properties();
-            IS = new FileInputStream("config.properties");
-            if (IS == null)
-            {
-                System.out.println("Sorry, unable to find ");
-                return;
-            }
-            property.load(IS);
-            int w=Integer.parseInt(property.getProperty("W"));
-           // int h =Integer.parseInt(property.getProperty("H"));
-           
-            this.dSmall = new Dimension();
-            this.dSmall.width=w;
-            this.dSmall.height=this.newPictureBuffer.getHeight()*w/this.newPictureBuffer.getWidth();            
-            this.small= new BufferedImage(this.dSmall.width,this.dSmall.height,BufferedImage.TYPE_INT_ARGB);            
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(Receiver_Board.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally
-        {
-            try
-            {
-                IS.close();
-            } catch (IOException ex)
-            {
-                System.out.println(ex.getMessage());
-            }
-        }
-
-    }
     
     //масштабирование экрана для предпросмота
     private void getSmallImage() 
@@ -239,14 +200,14 @@ public class ScreenProperties
     
     //проверка на необходимость нового разбиения экрана на блоки
     //при изменении расширения
-    public void CheckDimension(String msg)
+    public void CheckDimension(byte typeView)
     {
         //изменилось разрешение экрана
         if(this.basePictureBuffer.getHeight()!=this.newPictureBuffer.getHeight() ||
            this.basePictureBuffer.getWidth()!=this.newPictureBuffer.getWidth())
         {
           //  System.out.println("Error  getChanges()");
-            NewSize(msg);
+            NewSize(typeView);
             getBlocksCount();
         }
     }

@@ -50,7 +50,6 @@ public class ReceiverScreeen_UDP extends Thread
                 try{
                 
                 DS.receive(info);
-                ReportException.write("Receiver_UDP.run() receive");
                 ByteArrayInputStream BAIS= new ByteArrayInputStream(info.getData());                
                 DataInputStream DIS= new DataInputStream(BAIS);
                 
@@ -59,10 +58,7 @@ public class ReceiverScreeen_UDP extends Thread
                 
                 this.timeReceive = Calendar.getInstance();
                 byte isRecord=DIS.readByte();
-                
-               // System.out.println(" is Record " + isRecord+this.timeReceive.getTime().toString());
                 int length=(int)DIS.readByte();
-                ReportException.write("Receiver_UDP.run() receive L"+length);
                 char[] name_gr= new char[length];
                 for(int i=0;i<length;i++)
                 {
@@ -106,8 +102,7 @@ public class ReceiverScreeen_UDP extends Thread
                 {
                     IImageChanged IImCh= (IImageChanged)this.EImCh.getListener();
                     IImCh.getNewImage(null, (byte)10);
-                    ReportException.write("Receiver_UDP.run()"+se.getMessage());
-                    System.out.println( " ReceiverScreeen_UDP  SocketException #1 : udp" + se.getMessage());
+                    ReportException.write("ReceiverScreeen_UDP  1"+se.getMessage());
 
                 }
                 
@@ -115,8 +110,7 @@ public class ReceiverScreeen_UDP extends Thread
         }
         catch(Exception se)
         {
-            ReportException.write("Receiver_UDP.run()"+se.getMessage());
-            System.out.println( " ReceiverScreeen_UDP  SocketException #1 : udp" + se.getMessage());
+            ReportException.write("ReceiverScreeen_UDP 2"+se.getMessage());
         }
     }
     
@@ -140,14 +134,12 @@ public class ReceiverScreeen_UDP extends Thread
             
         } 
         catch (FileNotFoundException ex)
-        {
-            System.out.println("  1 "  +ex.getMessage());
-            ReportException.write("TCP_Client_RecieverPrScr.unzip()  FileNotFoundException\t"+ex.getMessage());
+        {           
+            ReportException.write("ReceiverScreeen_UDP.unzip()  FileNotFoundException\t"+ex.getMessage());
         } 
         catch (IOException ex)
-        {
-            System.out.println( " 2 "+length + "  "+ex.getMessage());
-             ReportException.write("TCP_Client_RecieverPrScr.unzip()  IOException\t"+ex.getMessage());
+        {          
+             ReportException.write("ReceiverScreeen_UDP.unzip()  IOException\t"+ex.getMessage());
         }
         finally {
      

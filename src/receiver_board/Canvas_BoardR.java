@@ -23,7 +23,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JEditorPane;
-import javax.swing.JPanel;
 import masterPanel.ReportException;
 import receiver_board.Canvas_BoardR.MyMouselistener;
 import receiver_board.shapes.IShapeAction;
@@ -390,7 +389,8 @@ public class Canvas_BoardR extends JEditorPane
        {
             Graphics2D g2D = (Graphics2D)g.create();
             rebuildBuffer();
-            drawContur(g2D);
+            g2D.setColor(getBackground());
+            g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
             g.drawImage(buffer, 0, 0, this);
             drawLinesNumber(g2D);
             //изменяем порядок прорисовки сначала фигуры потом текст
@@ -409,13 +409,16 @@ public class Canvas_BoardR extends JEditorPane
     private void rebuildBuffer()
     {  
         Graphics2D g2D = buffer.createGraphics();
-        g2D.setColor(getBackground());        
-        g2D.fillRect(0, 0, this.getWidth(), this.getHeight());        
-        g2D.scale(this.scale, this.scale); 
+        g2D.setColor(getBackground());
+        g2D.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+        g2D.scale(this.scale, this.scale);
+       
+       
         for (IShapeAction R : this.getShapes())
         {
             R.draw(g2D);
         } 
+        
         g2D.dispose();    
     }
    
@@ -441,17 +444,6 @@ public class Canvas_BoardR extends JEditorPane
         
     }
     
-    private void drawContur(Graphics2D g2D)
-    {   
-        AlphaComposite A1 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-        g2D.setComposite(A1);
-        g2D.setColor(Color.GREEN);
-        g2D.setColor(this.colorLine);
-        g2D.fillRect(0,(this.line+1)*this.rowHeigthSC-this.rowDescentSC,this.getWidth(),this.rowHeigthSC);
-        g2D.drawRect(0, 0, this.getWidth()-5, this.getHeight()-5);
-        AlphaComposite A2 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-        g2D.setComposite(A2);
-    }
 
     /**
      * При закрытии истории отображается страница(доска), которая транслируентся
@@ -533,17 +525,12 @@ public class Canvas_BoardR extends JEditorPane
             flag= true;
             Dim_parent.height=D.height;
         }
-      /*
-        if(flag)
-        {
-            this.getParent().setSize(Dim_parent);
-            this.getParent().setPreferredSize(Dim_parent);
-        }*/
         this.dimScale= D;
         
        
         this.setSize(D);
         this.setPreferredSize(D);
+       
         this.setFont(F.deriveFont(fontSize*scale)); 
         
     }

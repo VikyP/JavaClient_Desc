@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
+import masterPanel.ReportException;
 
 
 
@@ -39,31 +40,19 @@ import java.util.zip.GZIPOutputStream;
 // определяет параметры картинки
 // определяет индексы блоков с отличиями
 // фомирование массива байт необходимых блоков
-public class ScreenTiles
+class ScreenTiles
 {
-
-    private final String FULL="FULL";
-    private final String PREVIEW ="PREVIEW";
-    private String TypeView="";
+    public static final byte NULL=0;
+    public static final byte PREVIEW=1;
+    public static final byte FULL=2; 
+    
+    private byte TypeView=1;
     private ScreenProperties ImageToSend;
-   
-   // private Thread_GetPrintScreen T_GPS;
-
+    
     //индексы блоков для отправки
     ArrayList<Integer> blocks= new ArrayList<>();
     private Robot robot;
     
-    private int getTypeView()
-    {
-        switch(this.TypeView)
-        {
-            case FULL:return 1;
-            case PREVIEW: return 0;
-        
-        }
-    return -1;
-    
-    }
     
     public ScreenTiles(int w)
     {  
@@ -107,42 +96,52 @@ public class ScreenTiles
         return BI;
     }
     
-    public byte [] PrScrToBytes(String msg) throws IOException
+    /**
+     * обработка события запроса картинки
+     * @param typeView тип ззапрашиваемой картинки
+     * @return  данные для отправки
+     */
+    public byte [] PrScrToBytes(byte typeView)
     {
       
-       
         ImageToSend.newPictureBuffer=MakePrintScreen();
-        
-        if(!this.TypeView.equals(msg))
+        if(this.TypeView!=typeView)
         {
-           this.TypeView= msg;
-           ImageToSend.NewSize(this.TypeView);
-           
+            this.TypeView= typeView;
+            ImageToSend.NewSize(this.TypeView);
         }
-        switch(msg)
+        switch(typeView)
         {
-            case FULL: 
-            return this.gzip(this.byteCompressor());
-        
-            case PREVIEW:     
-               
-            return this.gzip(this.byteCompressorPreview());       
+            case FULL:
+                return this.gzip(this.byteCompressor());
+                
+            case PREVIEW:
+                
+                return this.gzip(this.byteCompressorPreview());
         }
-        return null;
+        return getHead(NULL);
     }
     
+    /**
+     * сжатие пакета данных
+     * @param body исходные данные
+     * @return сжатые данные
+     */
     byte [] gzip( byte [] body)
     {  
-       
+        // произошел сбой на этапе подготовки пакета
+       if(body==null)
+       {
+           ReportException.write("ScreenTiles return NULL /tType View :"+ this.TypeView);
+           return getHead(NULL);
+       }
         try
         {
             ByteArrayInputStream BAIS = new ByteArrayInputStream(body);
             ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
-            
             try 
             {
                 byte[] buffer = new byte[32768];
-                
                 GZIPOutputStream gzos = new GZIPOutputStream (BAOS);                
                 int length;
                 while ((length = BAIS.read(buffer)) > 0)
@@ -154,30 +153,37 @@ public class ScreenTiles
             }
             catch (FileNotFoundException ex)
             {
-                return null;
+                return getHead(NULL);
                 
-            } catch (IOException ex)
+            }
+            catch (IOException ex)
             {
-                return null;
+                return getHead(NULL);
             }
             
             byte [] bodyZip=BAOS.toByteArray();            
-            byte [] head =this.getHead(bodyZip.length +5);//int(4 byte)+1byte
-          
+            byte [] head =this.getHead(bodyZip.length);
             BAOS.reset();
-            BAOS.write(head);
-            BAOS.write(bodyZip, 0, bodyZip.length);
-            
+            if(bodyZip.length==0)
+            {
+                BAOS.write(getHead(NULL));
+            }
+            else
+            {
+                BAOS.write(head);
+                BAOS.write(bodyZip, 0, bodyZip.length);
+            }
             return  BAOS.toByteArray();
-            
         } 
         catch (IOException ex)
         { 
-            return null;
+            return getHead(NULL);
         } 
     }
 
-    
+    /**
+     * определение блоков с отличиями для отправки
+     */
     private void getChanges()
     {
         this.ImageToSend.CheckDimension(this.TypeView);
@@ -223,6 +229,10 @@ public class ScreenTiles
 
     }
 
+    /**
+     * Подготовка пакета для отправки предпросмотра
+     * @return 
+     */
     public byte[] byteCompressorPreview( ) 
     {
         ByteArrayOutputStream BAOS= new ByteArrayOutputStream();
@@ -278,27 +288,44 @@ public class ScreenTiles
         }
     }
      
-    public byte [] getHead(int size ) throws IOException
+    /**
+     * Формироваине заголовка 
+     * размер пакета для распаковки
+     * тип просмотра
+     * @param size 
+     * @return 
+     */
+    public byte [] getHead(int size ) 
     {
         ByteArrayOutputStream BAOS= new ByteArrayOutputStream();
         DataOutputStream DOS= new DataOutputStream(BAOS);
         try
         {
             DOS.writeInt(size);
-            DOS.writeByte((byte)this.getTypeView());
+            DOS.writeByte(this.TypeView);
             return BAOS.toByteArray();
         } 
         catch (IOException ex)
         {
+           ReportException.write("ScreenTiles.getHead() return NULL "+ex.getMessage());
            return null;
         }
         finally
         {
-            DOS.close();
-        }
+            try
+            {
+                DOS.close();
+            } catch (IOException ex)
+            {
+               ReportException.write("ScreenTiles "+ex.getMessage());
+            }
+        } 
     }
-     
-    public byte[] byteCompressor( ) throws IOException
+     /**
+      * подготовка пакета для отправки
+      * @return 
+      */
+    public byte[] byteCompressor( )
     {
         ByteArrayOutputStream BAOS= new ByteArrayOutputStream();
         DataOutputStream DOS= new DataOutputStream(BAOS);
@@ -348,19 +375,22 @@ public class ScreenTiles
         }
         catch( IOException ex)
         { 
+            ReportException.write("ScreenTiles.byteCompressor() return NULL "+ex.getMessage());
             return null;
         }
        
         finally
         {
-            DOS.close();
+            try {
+                DOS.close();
+            } 
+            catch (IOException ex)
+            {
+                Logger.getLogger(ScreenTiles.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }
-    
-    
-    
-    
     
     
 }

@@ -62,21 +62,20 @@ class Thread_SenderImage extends Thread
                }
                while( client.getInputStream().available()>0);
                
-               byte [] a =BAOS.toByteArray();
                // получаем команду на отправку( preview or full)
-               String msg = new String(a,0,a.length,"UTF-8");
+               // команда соответсвует 1 byte 
+               byte typeView = BAOS.toByteArray()[0];
               
                //отправляем команду на обработку и получаем массив(запакованный) для отправки
-               byte[] AA=  ST.PrScrToBytes(msg);
+               byte[] AA=  ST.PrScrToBytes(typeView);
+               
                 if(AA!=null)
-                {
-                   
+                { 
                     client.getOutputStream().write(AA);                    
                 }
                 else
-                { 
-                  //  System.out.println("Send Null"); 
-                    client.getOutputStream().write("Null".getBytes());
+                {
+                    client.getOutputStream().write(new byte[Integer.BYTES+Byte.BYTES]);
                 }
                
             }

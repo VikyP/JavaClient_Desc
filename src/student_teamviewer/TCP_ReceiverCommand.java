@@ -80,8 +80,8 @@ public class TCP_ReceiverCommand extends Thread
                 byte[] command =BAOS.toByteArray();
                 BAIS = new ByteArrayInputStream( command);
                 DIS = new DataInputStream(BAIS);
-                byte size=DIS.readByte();
-                MessageAction MA= new MessageAction(DIS,size);
+               // byte size=DIS.readByte();
+                MessageAction MA= new MessageAction(DIS);
                 MA.getRobot(R);
                 
                // System.out.println("    "+Cursor.getSystemCustomCursor(null));

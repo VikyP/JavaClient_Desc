@@ -7,6 +7,8 @@ package masterPanel;
 
 //import com.sun.awt.AWTUtilities;
 import com.sun.awt.AWTUtilities;
+import java.awt.Component;
+import java.awt.Cursor;
 //import com.sun.glass.ui.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -51,15 +53,15 @@ import userControl.ToolsPanel;
 public class MasterFrame extends JFrame {
 
     private Point begin;
-    private Point oldLocation;
 
     class MouseMotionListenerFrame implements MouseMotionListener {
 
         @Override
         public void mouseDragged(MouseEvent e)
         {
+            Cursor mouseCursor =((Component)e.getSource()).getCursor();
             //перемещение окна поэкрану мышкой
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.MOVE_CURSOR)  
+            if (mouseCursor.getType() == java.awt.Cursor.MOVE_CURSOR)  
                 
             {
                 int stepX = e.getX() - MasterFrame.this.begin.x;
@@ -71,7 +73,7 @@ public class MasterFrame extends JFrame {
             Dimension newSize= new Dimension();
            
 
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.E_RESIZE_CURSOR)
+            if (mouseCursor.getType() == java.awt.Cursor.E_RESIZE_CURSOR)
             {
                 int stepX = e.getX() - MasterFrame.this.begin.x;                
                  newSize = 
@@ -79,54 +81,51 @@ public class MasterFrame extends JFrame {
                         MasterFrame.this.getPreferredSize().height + MasterFrame.this.MRB.BR.getStepY(stepX));
             }
 
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.N_RESIZE_CURSOR) {
-                // return;
+            if (mouseCursor.getType() == java.awt.Cursor.N_RESIZE_CURSOR)
+            {
                 int stepY = e.getY() - MasterFrame.this.begin.y;               
                  newSize = new Dimension(MasterFrame.this.getPreferredSize().width + MasterFrame.this.MRB.BR.getStepX(stepY), 
                      MasterFrame.this.getPreferredSize().height + stepY);
               
                 
             }
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.SE_RESIZE_CURSOR)
+            if (mouseCursor.getType() == java.awt.Cursor.SE_RESIZE_CURSOR)
             {
                 int stepX = e.getX() - MasterFrame.this.begin.x;
                 int stepY = MasterFrame.this.MRB.BR.getStepY(stepX);
                 newSize = new Dimension(MasterFrame.this.getPreferredSize().width + stepX, MasterFrame.this.getPreferredSize().height + stepY);
-               
-              //  System.out.println("2    W= "+ MasterFrame.this.getWidth()+"  H ="+MasterFrame.this.getHeight());
             }
-         //  MasterFrame.this.MRB.BR.dimScale=newSize;
+            
            MasterFrame.this.setSize(newSize);
-            setNewSizeCanvas();
+           setNewSizeCanvas();
 
         }
 
         @Override
         public void mouseMoved(MouseEvent e)
         { 
-            
-            int delta = 20;
+            Component mouseComponent=((Component)e.getSource());
+            int delta = 15;
             if ( (MasterFrame.this.getX() + MasterFrame.this.getWidth()-e.getXOnScreen()) < delta)
             {
                 if ((MasterFrame.this.getY() + MasterFrame.this.getHeight()-e.getYOnScreen()) < delta) 
                 {
-                    MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.SE_RESIZE_CURSOR));
-                  // MasterFrame.this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.SE_RESIZE_CURSOR));
+                    mouseComponent.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.SE_RESIZE_CURSOR));
                     return;
                 }
                 else 
                 {
-                    MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.E_RESIZE_CURSOR));
-                 //   MasterFrame.this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.E_RESIZE_CURSOR));
+                    mouseComponent.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.E_RESIZE_CURSOR));
                     return;
                 }
             }
-            if (( (MasterFrame.this.getY() + MasterFrame.this.getHeight())-e.getYOnScreen()) < delta) {
-                MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.N_RESIZE_CURSOR));
+            if (( (MasterFrame.this.getY() + MasterFrame.this.getHeight())-e.getYOnScreen()) < delta)
+            {
+                mouseComponent.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.N_RESIZE_CURSOR));
             }
             else
             {
-                MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
+                mouseComponent.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
 
         }
@@ -142,29 +141,26 @@ public class MasterFrame extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) 
         {
-            if (((JComponent)(MasterFrame.this.MRB.TP)).getCursor().getType() == java.awt.Cursor.DEFAULT_CURSOR) 
+            Component mouseComponent=((Component)e.getSource());
+            if (mouseComponent.getCursor().getType() == java.awt.Cursor.DEFAULT_CURSOR) 
             {
-               ((JComponent)(MasterFrame.this.MRB.TP)).setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR));
+               mouseComponent.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR));
             }
             
-            if (MasterFrame.this.MRB.BR.getCursor().getType() == java.awt.Cursor.DEFAULT_CURSOR) 
-            {
-               MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR));
-            }
             MasterFrame.this.begin = e.getPoint();
         }
 
         @Override
         public void mouseReleased(MouseEvent e)
         {
+            Cursor mouseCursor =((Component)e.getSource()).getCursor();
 
-            if (MasterFrame.this.MRB.BR.getCursor().getType() != java.awt.Cursor.MOVE_CURSOR) 
+            if (mouseCursor.getType() != java.awt.Cursor.MOVE_CURSOR) 
             {
-                MasterFrame.this.setPreferredSize(MasterFrame.this.getSize());                
-               // setNewSizeCanvas();
+                MasterFrame.this.setPreferredSize(MasterFrame.this.getSize());
             }
 
-            MasterFrame.this.MRB.BR.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
+            ((Component)e.getSource()).setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));
         }
 
         @Override
@@ -325,7 +321,6 @@ public class MasterFrame extends JFrame {
         this.tools.setBounds(toolPanelX, MRB.getHeightToolBar(), toolPanelWidth, toolPanelHeight);
         this.tools.trancparency.addChangeListener(CL_transparency);
         this.tools.isAlwaysOnTop.addItemListener(CL_topAll);
-     //   this.tools.sizer.addChangeListener(CL_sizer);
     
         JLayeredPane lp = getLayeredPane();
         lp.add(this.tools, JLayeredPane.POPUP_LAYER);
@@ -434,6 +429,7 @@ public class MasterFrame extends JFrame {
         // прозрачность
         try
         {
+            
             this.setUndecorated(true);
             this.setAlwaysOnTop(true);
             this.setVisible(true);
