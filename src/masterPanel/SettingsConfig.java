@@ -39,6 +39,8 @@ public class SettingsConfig
 {
     public boolean isValid;
     public boolean isFirst;
+    private boolean isDefine;
+    
     public Color Background;
     public Color Foreground;
     public float scale=0;
@@ -100,29 +102,31 @@ public class SettingsConfig
             Element ip_udp = (Element)doc.getElementsByTagName("IP_UDP").item(0); 
             this.IP_UDP=InetAddress.getByName(ip_udp.getTextContent().trim());
             
-             // уточняем IP
-            if(!this.IP.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
-            { 
-                this.IP=InetAddress.getByName(InetAddress.getLocalHost().getHostAddress());
-                byte[] mask=this.IP_UDP.getAddress();
-                byte [] newUDP=this.IP.getAddress();
-                for(int i=0; i<mask.length;i++)
-                { 
-                   
-                    if (((mask[i]&0x000000FF)^0xFF)==0)
-                    {
-                       
-                        newUDP[i]=(byte) 0xFF;
-                    }                
-                }
-               this.IP_UDP=InetAddress.getByAddress(newUDP);
-             //  System.out.println(" this.IP_UDP   "+this.IP_UDP.getHostAddress());
-               ip.setTextContent(this.IP.getHostAddress());
-               ip_udp.setTextContent(this.IP_UDP.getHostAddress());
-               saveDoc();
-            }
-           
-           
+            Element isDef=(Element)doc.getElementsByTagName("Define").item(0);
+            this.isDefine=Boolean.parseBoolean(isDef.getTextContent());
+            
+            if(this.isDefine)
+           {
+               // уточняем IP
+               if(!this.IP.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
+               { 
+                   this.IP=InetAddress.getByName(InetAddress.getLocalHost().getHostAddress());
+                   byte[] mask=this.IP_UDP.getAddress();
+                   byte [] newUDP=this.IP.getAddress();
+                   for(int i=0; i<mask.length;i++)
+                   {
+                       if (((mask[i]&0x000000FF)^0xFF)==0)
+                       {
+
+                           newUDP[i]=(byte) 0xFF;
+                       }                
+                   }
+                  this.IP_UDP=InetAddress.getByAddress(newUDP);
+                  ip.setTextContent(this.IP.getHostAddress());
+                  ip_udp.setTextContent(this.IP_UDP.getHostAddress());
+                  saveDoc();
+               }
+           }
             
             Element p_udp = (Element)doc.getElementsByTagName("PORT_UDP").item(0); 
             this.PORT_UDP=Integer.parseInt(p_udp.getTextContent());            
@@ -133,7 +137,6 @@ public class SettingsConfig
             this.PORT_TCP_ScStr=this.PORT_UDP+4;
            //</editor-fold> 
             
-          //  System.out.println("    this.IP"+this.IP);
             Element wPrView = (Element)doc.getElementsByTagName("WidthPreview").item(0);
             this.width=Integer.parseInt(wPrView.getTextContent()); 
             

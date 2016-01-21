@@ -20,26 +20,28 @@
 		
 	<!--port UDP for get ScreenStream +4 -->		
 	<!--PORT_TCP_ScStr>9804</PORT_TCP_ScStr-->
+     <!-- Флаг определяющий выполнять или нет автоопределение IP -->
+    <Define>True</Define>
         
 </Configuration>
     <!--Фамилия Имя студента-->
         <Name> Student</Name>
       <!--Расположение и размеры доски-->  
         <BoundsBoard>
-            <X>381</X>
-            <Y>-932</Y>
-            <Width>580</Width>
-            <Height>520</Height>
-	    	<Scale>0.655</Scale>
+            <X>442</X>
+            <Y>171</Y>
+            <Width>432</Width>
+            <Height>387</Height>
+	    	<Scale>0.469</Scale>
         </BoundsBoard>
 
 	<!-- Size PreviewPane -->
 	<WidthPreview>240</WidthPreview>  
       
 	<Colors>
-		<!--Цвет фона-->
+            <!--Цвет фона-->
 		<Background>FFFF99</Background>
-        <!--Цвет текста-->
+            <!--Цвет текста-->
 		<Foreground>006666</Foreground>
 	</Colors>
         
