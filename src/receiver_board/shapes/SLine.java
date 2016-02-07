@@ -7,20 +7,16 @@ package receiver_board.shapes;
  */
 
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import java.awt.Point;
 import java.awt.Rectangle;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -81,7 +77,7 @@ public class SLine extends MyShape implements IShapeAction
         catch (IOException ex)
         {
              this.Type=-1;
-            Logger.getLogger(SLine.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
             
     }

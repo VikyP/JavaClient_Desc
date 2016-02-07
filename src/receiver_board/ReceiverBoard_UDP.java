@@ -9,9 +9,8 @@ import receiver_board.events.EventTextChanged;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import masterPanel.ReportException;
+import masterPanel.SettingsConfig;
 
 import receiver_board.events.EventGraphChanged;
 import receiver_board.events.IGraphChanged;
@@ -39,14 +38,14 @@ public class ReceiverBoard_UDP extends Thread
     
     public EventTextChanged ETCh;
     public EventGraphChanged EGrCh;
-    private final int port_UDP_Board;
+   
     private final byte  TEXT=1;
     private final byte  SHAPES=2;
     public Dimension canvasSize;
     
-    public ReceiverBoard_UDP( int port)
+    public ReceiverBoard_UDP( )
     {
-        this.port_UDP_Board=port;
+       
         this.setDaemon(true);
         ETCh= new EventTextChanged();
         EGrCh= new EventGraphChanged();
@@ -59,7 +58,7 @@ public class ReceiverBoard_UDP extends Thread
     public synchronized void run()
     {  try
         {
-            DatagramSocket  DS  = new DatagramSocket (this.port_UDP_Board);           
+            DatagramSocket  DS  = new DatagramSocket (SettingsConfig.PORT_UDP_BOARD);           
             byte[] byte_info= new byte [32768] ;
             DatagramPacket info= new DatagramPacket (byte_info, 0, byte_info.length);
             boolean isReceive=false;
@@ -154,7 +153,7 @@ public class ReceiverBoard_UDP extends Thread
             
         } catch (IOException ex)
         {
-            Logger.getLogger(ReceiverBoard_UDP.class.getName()).log(Level.SEVERE, null, ex);
+           ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
        
         for (int i=0; i<length;i++)
@@ -185,8 +184,7 @@ public class ReceiverBoard_UDP extends Thread
                 }
             } catch (IOException ex)
             {
-                System.out.println("    Exc ");
-                Logger.getLogger(ReceiverBoard_UDP.class.getName()).log(Level.SEVERE, null, ex);
+                ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
             }
             }
        

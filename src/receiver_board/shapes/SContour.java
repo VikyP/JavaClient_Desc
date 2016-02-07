@@ -10,8 +10,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -43,7 +42,7 @@ public class SContour extends MyShape
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(SLine.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
     }
     

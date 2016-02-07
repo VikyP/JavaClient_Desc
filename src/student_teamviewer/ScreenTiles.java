@@ -66,7 +66,7 @@ class ScreenTiles
         catch (AWTException ex)
         {
             this.robot=null;
-            Logger.getLogger(ScreenTiles.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
          ImageToSend.newPictureBuffer=MakePrintScreen();
          ImageToSend.setDimentionSmall(w);
@@ -77,11 +77,10 @@ class ScreenTiles
      */
     private BufferedImage MakePrintScreen() 
     {
+        //*** Огрубление цвета
         Dimension D =Toolkit.getDefaultToolkit().getScreenSize();
         BufferedImage BI=robot.createScreenCapture(new Rectangle(0,0,D.width,D.height));
-       //*** Огрубление цвета
-        WritableRaster WR = BI.getRaster();
-        DataBuffer DB = WR.getDataBuffer();
+        DataBuffer DB = robot.createScreenCapture(new Rectangle(0,0,D.width,D.height)).getRaster().getDataBuffer();
         
         for (int i = 0; i < BI.getHeight(); i++)
         {
@@ -103,7 +102,7 @@ class ScreenTiles
      */
     public byte [] PrScrToBytes(byte typeView)
     {
-      
+       Runtime r=Runtime.getRuntime(); 
         ImageToSend.newPictureBuffer=MakePrintScreen();
         if(this.TypeView!=typeView)
         {
@@ -113,12 +112,14 @@ class ScreenTiles
         switch(typeView)
         {
             case FULL:
+                r.gc () ;
                 return this.gzip(this.byteCompressor());
                 
             case PREVIEW:
-                
+               r.gc () ;
                 return this.gzip(this.byteCompressorPreview());
         }
+        r.gc () ;
         return getHead(NULL);
     }
     
@@ -186,9 +187,10 @@ class ScreenTiles
      */
     private void getChanges()
     {
+       
         this.ImageToSend.CheckDimension(this.TypeView);
-        DataBuffer DB_Base = this.ImageToSend.DataBase();
-        DataBuffer DB_New = this.ImageToSend.DataNew();
+        DataBuffer DB_Base = this.ImageToSend.basePictureBuffer.getRaster().getDataBuffer();
+        DataBuffer DB_New = this.ImageToSend.newPictureBuffer.getRaster().getDataBuffer();
         
         // очищается контейнер для отправки блоков
         this.blocks.clear();
@@ -226,7 +228,7 @@ class ScreenTiles
          } 
         
         this.ImageToSend.NextImage(); 
-
+        
     }
 
     /**
@@ -283,7 +285,7 @@ class ScreenTiles
             }
             catch (IOException ex)
             {
-                Logger.getLogger(ScreenTiles.class.getName()).log(Level.SEVERE, null, ex);
+                ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
             }
         }
     }
@@ -348,7 +350,7 @@ class ScreenTiles
         
         DOS.writeInt(blocks.size());  //System.out.println("blocks.size() "+blocks.size()); 
         
-        DataBuffer DB_New =this.ImageToSend.DataNew();
+        DataBuffer DB_New =this.ImageToSend.newPictureBuffer.getRaster().getDataBuffer();
        
         for (int b = 0; b < blocks.size(); b++)
         {
@@ -386,7 +388,7 @@ class ScreenTiles
             } 
             catch (IOException ex)
             {
-                Logger.getLogger(ScreenTiles.class.getName()).log(Level.SEVERE, null, ex);
+                ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
             }
         }
         

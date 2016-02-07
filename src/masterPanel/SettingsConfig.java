@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,12 +41,12 @@ public class SettingsConfig
     public boolean isValid;
     public boolean isFirst;
     private boolean isDefine;
-    
+    public static boolean  isConnection;
     public Color Background;
     public Color Foreground;
-    public float scale=0;
     
     public int width;
+    public float opacity;
     
     public Rectangle Bounds= new Rectangle();
     
@@ -53,27 +54,31 @@ public class SettingsConfig
    /**
      * порт  маяка студента
      */
-    public int  PORT_UDP; 
+    public static int   PORT_UDP; 
     /**
      * порт получения доски
      */
-    public int  PORT_UDP_BOARD;
+    public static int   PORT_UDP_BOARD;
+    private final int DELTA_UDP_BOARD=1;
     /**
      * порт TCP соединения для отправки картинки
      */
-    public int  PORT_TCP_IMG;
+    public static int  PORT_TCP_IMG;
+    private final int DELTA_TCP_IMG=2;
     /**
      * порт TCP соединения для получения команды
      */
-    public int  PORT_TCP_COMMAND;
+    public static int  PORT_TCP_COMMAND;
+    private  final int DELTA_TCP_COMMAND=3;
     /**
      * порт для получения экрана преподавателя по UDP
      */
-    public int  PORT_TCP_ScStr;
+    public static int  PORT_TCP_ScStr;
+    private final int DELTA_TCP_ScStr=4;
     
     
-    public InetAddress IP;
-    public InetAddress IP_UDP;    
+    public static InetAddress IP;
+    public static InetAddress IP_UDP;
 
    
     Document doc;
@@ -83,6 +88,8 @@ public class SettingsConfig
         isValid=isLoadStyle();
         isFirst=isFirst();       
     }
+    
+    
     
     private boolean isLoadStyle()
     { 
@@ -105,36 +112,37 @@ public class SettingsConfig
             Element isDef=(Element)doc.getElementsByTagName("Define").item(0);
             this.isDefine=Boolean.parseBoolean(isDef.getTextContent());
             
+            Element isConnect=(Element)doc.getElementsByTagName("AutoConnection").item(0);
+            this.isConnection=Boolean.parseBoolean(isConnect.getTextContent());
+            
             if(this.isDefine)
            {
                // уточняем IP
-               if(!this.IP.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
-               { 
-                   this.IP=InetAddress.getByName(InetAddress.getLocalHost().getHostAddress());
-                   byte[] mask=this.IP_UDP.getAddress();
-                   byte [] newUDP=this.IP.getAddress();
-                   for(int i=0; i<mask.length;i++)
-                   {
-                       if (((mask[i]&0x000000FF)^0xFF)==0)
-                       {
-
-                           newUDP[i]=(byte) 0xFF;
-                       }                
-                   }
-                  this.IP_UDP=InetAddress.getByAddress(newUDP);
-                  ip.setTextContent(this.IP.getHostAddress());
-                  ip_udp.setTextContent(this.IP_UDP.getHostAddress());
-                  saveDoc();
-               }
+               InetAddress [] all_IP=InetAddress.getAllByName(InetAddress.getLocalHost().getHostAddress());
+               for(InetAddress ip_Item:all_IP)
+               {
+                  // System.out.println(" IP "+ip_Item);
+                    boolean f=true;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        f=((this.IP_UDP.getAddress()[j]&0xFF)==(ip_Item.getAddress()[j]&0xFF) ||(this.IP_UDP.getAddress()[j]&0xFF)==255 );
+                    }
+                    if(f)
+                    {
+                        SettingsConfig.IP= ip_Item;
+                        ip.setTextContent(this.IP.getHostAddress());
+                        saveDoc(); 
+                       // break;
+                    }               
+               
+               }               
            }
             
             Element p_udp = (Element)doc.getElementsByTagName("PORT_UDP").item(0); 
-            this.PORT_UDP=Integer.parseInt(p_udp.getTextContent());            
+            this.PORT_UDP=Integer.parseInt(p_udp.getTextContent()); 
+            setAllPorts();
             
-            this.PORT_UDP_BOARD=this.PORT_UDP+1;            
-            this.PORT_TCP_IMG=this.PORT_UDP+2;
-            this.PORT_TCP_COMMAND=this.PORT_UDP+3;
-            this.PORT_TCP_ScStr=this.PORT_UDP+4;
+            
            //</editor-fold> 
             
             Element wPrView = (Element)doc.getElementsByTagName("WidthPreview").item(0);
@@ -158,23 +166,23 @@ public class SettingsConfig
             
             Element h = (Element)doc.getElementsByTagName("Height").item(0); 
             this.Bounds.height=Integer.parseInt(h.getTextContent());
-            
-             Element sc = (Element)doc.getElementsByTagName("Scale").item(0);             
-             this.scale=Float.parseFloat(sc.getTextContent());
+            Element op = (Element)doc.getElementsByTagName("Opacity").item(0); 
+            this.opacity=Float.parseFloat(op.getTextContent());
             //</editor-fold>   
+           
             return true;
         }
         catch (ParserConfigurationException ex)
         {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() );  
         }
         catch (SAXException ex)
         {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() );    
         }
         catch (IOException ex)
         {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() );   
         }
         
         return false;
@@ -201,7 +209,7 @@ public class SettingsConfig
          } 
          catch (IOException ex)
         {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);  
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
         return flag;
     }
@@ -232,7 +240,7 @@ public class SettingsConfig
     
     }
     
-    public void saveBounds(Rectangle R,float scale)
+    public void saveBounds(Rectangle R,float op_)
     {
         Element x = (Element)doc.getElementsByTagName("X").item(0);             
         x.setTextContent(String.valueOf( R.x));
@@ -245,14 +253,64 @@ public class SettingsConfig
 
         Element h = (Element)doc.getElementsByTagName("Height").item(0);             
         h.setTextContent(String.valueOf( R.height));
-
-        Element sc = (Element)doc.getElementsByTagName("Scale").item(0);             
-        sc.setTextContent(String.valueOf( scale));
+        
+        Element op = (Element)doc.getElementsByTagName("Opacity").item(0);             
+        op.setTextContent(String.valueOf(op_));
 
         saveDoc();
         
     }
     
+   private void  setAllPorts()
+    {
+        PORT_UDP_BOARD=PORT_UDP+DELTA_UDP_BOARD;            
+        PORT_TCP_IMG=PORT_UDP+DELTA_TCP_IMG;
+        PORT_TCP_COMMAND=PORT_UDP+DELTA_TCP_COMMAND;
+        PORT_TCP_ScStr=PORT_UDP+DELTA_TCP_ScStr;
+    }
+    
+   public  boolean setCongig ()
+    {    
+        boolean isSave=false;    
+        try
+        {
+            setAllPorts();
+            
+            //если настройки менялись, то изменения сохраняться
+            Element isConnect=(Element)doc.getElementsByTagName("AutoConnection").item(0);
+            if(isConnection!=Boolean.parseBoolean(isConnect.getTextContent()))
+            {
+              isConnect.setTextContent(""+isConnection);
+              isSave=true;
+            }
+           
+            Element ip = (Element)doc.getElementsByTagName("IP").item(0);
+            if(InetAddress.getByName(ip.getTextContent().trim())!=IP)
+            {
+                ip.setTextContent(IP.getHostAddress());
+                isSave=true;
+            }
+            Element ip_udp = (Element)doc.getElementsByTagName("IP_UDP").item(0);
+            if(InetAddress.getByName(ip_udp.getTextContent().trim())!=IP_UDP)
+            {
+                ip_udp.setTextContent(IP_UDP.getHostAddress());
+                isSave=true;
+            }
+            Element p_udp = (Element)doc.getElementsByTagName("PORT_UDP").item(0);
+            if(PORT_UDP!=Integer.parseInt(p_udp.getTextContent()) )
+            {
+                
+                p_udp.setTextContent("" + PORT_UDP);
+                isSave = true;
+            }
+            if(isSave) saveDoc();
+        } 
+        catch (UnknownHostException ex)
+        {
+            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return isSave;
+    }
     
     public void saveDoc()
     {
@@ -263,9 +321,9 @@ public class SettingsConfig
             Transformer transformer = factory.newTransformer();
             transformer.transform(domSource, fileResult);
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
+           ReportException.write(this.toString()+"\t"+ex.getMessage() );  
         } catch (TransformerException ex) {
-            Logger.getLogger(SettingsConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() );  
         }
     
     }

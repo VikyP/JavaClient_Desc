@@ -6,6 +6,7 @@
 package receiver_board;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import receiver_board.events.IGraphChanged;
@@ -16,6 +17,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -119,6 +121,7 @@ public class Canvas_BoardR extends JEditorPane
         {
             PageContent page = (PageContent) me.getSource();
             currentPage = page.number;
+            
             Canvas_BoardR.this.setText("");
             Canvas_BoardR.this.setText(Canvas_BoardR.this.pages.get(currentPage).getText());
         }
@@ -129,6 +132,7 @@ public class Canvas_BoardR extends JEditorPane
      */
     public ITextChanged ITCh = new ITextChanged()
     {
+        int pageIndex=0;
 
         @Override
         public void getNewText(byte numPage, byte numLine,byte fontHeigt, String s)
@@ -161,6 +165,18 @@ public class Canvas_BoardR extends JEditorPane
             if(!history.isVisible() && currentPage != numberPageGet)
             {
                 setCurrentPage();
+            }
+            else
+            {
+                if(pageIndex!=numberPageGet)
+                { 
+                    for (PageContent p : pages)
+                    {
+                        p.isCurrent = (numberPageGet == p.number);
+                        
+                    } 
+                    history.repaint();
+                }
             }
             
             Canvas_BoardR.this.pagesUpdate(numberPageGet, s);
@@ -221,7 +237,6 @@ public class Canvas_BoardR extends JEditorPane
                 {
                     Canvas_BoardR.this.scale();
                 }
-                System.out.println(" Canvas_BoardR.this   Dimension  " + Canvas_BoardR.this.getSize());    
             }
            
             if (numPage > 0)
@@ -337,7 +352,6 @@ public class Canvas_BoardR extends JEditorPane
         this.height_B=this.rowHeigth*(this.rowsCount+1)+this.top+this.bottom ;
         g2d.dispose();        
         buffer = new BufferedImage(this.width_B, this.height_B,BufferedImage.TYPE_INT_RGB);
-       // System.out.println("   this.width_B  "+ this.width_B);
         
        
     }
@@ -396,13 +410,12 @@ public class Canvas_BoardR extends JEditorPane
             //изменяем порядок прорисовки сначала фигуры потом текст
             getUI().paint(g2D, this);
             g2D.dispose();
+            this.hashCode();
           
        }
        catch(Exception exc)
        {
-           System.out.println(" Canvas_BoardR   Dimension  " +this.getWidth()); 
-           System.out.println(" Exception !!!" +exc.getMessage());
-           ReportException.write(exc.getMessage());
+           ReportException.write(this.toString()+"\t"+exc.getMessage() ); 
        }
         
     }
@@ -579,6 +592,7 @@ class PageContent extends JEditorPane
     Dimension D = new Dimension(75, 60);
     private Font F = new Font(Font.MONOSPACED, Font.PLAIN,2);
     public byte number;
+    public boolean isCurrent=false;
 
     public PageContent(byte number, Color b, Color f, MyMouselistener MML)
     {
@@ -622,6 +636,12 @@ class PageContent extends JEditorPane
 
         // Рисование фона       
         Graphics2D g2D = (Graphics2D)g.create();
+        if(isCurrent)
+        {
+            g2D.setColor(Color.GREEN);
+            g2D.setStroke( new BasicStroke(1.5f));
+            g2D.drawRect(0, 0, this.getWidth()-1, this.getHeight()-1);
+        }
       
         g2D.scale(this.scale, this.scale);
         synchronized (this.shapesContent)
@@ -632,15 +652,19 @@ class PageContent extends JEditorPane
             }
         }
         drawLinesNumber(g2D);
+        
+        
         g2D.dispose();
         
     }
 
     private void drawLinesNumber(Graphics2D g2D)
     {
+        
        
         g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         g2D.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 500));
+        
         AlphaComposite A1 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
         g2D.setComposite(A1);
         g2D.setColor(this.getForeground());

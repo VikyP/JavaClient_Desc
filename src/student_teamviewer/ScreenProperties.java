@@ -12,14 +12,6 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import masterPanel.Receiver_Board;
-import receiver_board.ReceiverScreeen_UDP;
 
 /**
  *
@@ -39,25 +31,15 @@ public class ScreenProperties
     public int Height;
     
     // снимок экрана для сранения
-    private BufferedImage basePictureBuffer;  
+    public BufferedImage basePictureBuffer;  
     // получение обновленного снимка экрана
     public BufferedImage newPictureBuffer;
     
     
     public Dimension dSmall;
     
-    private BufferedImage small;
+    public BufferedImage small;
     
-    public DataBuffer DataNew()
-    {
-        WritableRaster WR_New = this.newPictureBuffer.getRaster();
-        return WR_New.getDataBuffer();
-    }
-    public DataBuffer DataBase()
-    {
-        WritableRaster WR_Base = this.basePictureBuffer.getRaster();
-        return WR_Base.getDataBuffer();
-    }
     
     public DataBuffer DataSmall()
     {
@@ -144,8 +126,7 @@ public class ScreenProperties
         }
        
         this.basePictureBuffer=new BufferedImage(D.width, D.height, BufferedImage.TYPE_INT_ARGB);
-        WritableRaster WR_Base = this.basePictureBuffer.getRaster();
-        DataBuffer DB_Base = WR_Base.getDataBuffer();
+        DataBuffer DB_Base = this.basePictureBuffer.getRaster().getDataBuffer();
         for (int i=0; i<this.basePictureBuffer.getHeight();i++)
         {
             for (int j = 0; j < this.basePictureBuffer.getWidth(); j++)
@@ -186,11 +167,10 @@ public class ScreenProperties
     //масштабирование экрана для предпросмота
     private void getSmallImage() 
     {
-      
-       // Dimension D= new Dimension(this.newPictureBuffer.getWidth()*this.dSmall.height/this.newPictureBuffer.getHeight(), this.dSmall.height);
-        
+       
         Graphics myG = this.small.createGraphics();
         Graphics2D graphics2D = this.small.createGraphics();
+        //Has worked best in my case
         graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR); //Has worked best in my case
         graphics2D.drawImage(this.newPictureBuffer, 0, 0, this.small.getWidth(),this.small.getHeight(), null);
       

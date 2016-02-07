@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -93,7 +94,7 @@ public class SPenLine  extends MyShape implements IShapeAction
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(SLine.class.getName()).log(Level.SEVERE, null, ex);
+             ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
             
     }

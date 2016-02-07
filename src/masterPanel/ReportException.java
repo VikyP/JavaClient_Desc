@@ -43,12 +43,12 @@ public class ReportException
        
        catch (FileNotFoundException ex)
        {
-           Logger.getLogger(ReportException.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("    " + ex);
        } 
        
        catch (IOException ex)
         {
-            Logger.getLogger(ReportException.class.getName()).log(Level.SEVERE, null, ex);
+           System.out.println("    " + ex);
         }
     
    }

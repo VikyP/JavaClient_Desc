@@ -6,8 +6,6 @@
 package student_teamviewer;
 
 import java.awt.AWTException;
-import java.awt.Cursor;
-import java.awt.MouseInfo;
 import java.awt.Robot;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 import student_teamviewer.robotDevice.MessageAction;
 
 /**
@@ -41,7 +40,7 @@ public class TCP_ReceiverCommand extends Thread
         }
         catch (AWTException ex)
         {
-            Logger.getLogger(TCP_ReceiverCommand.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
 
     }
@@ -52,12 +51,10 @@ public class TCP_ReceiverCommand extends Thread
     @Override
     public void run()
     {
-       // System.out.println(this.clientCommand.getInetAddress().toString());
-
+      
         byte[] buffer;
         ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
         ByteArrayInputStream BAIS =null;
-        DataOutputStream DOS = null;
         DataInputStream DIS = null;
        
         try
@@ -69,7 +66,6 @@ public class TCP_ReceiverCommand extends Thread
                 do
                 {
                     int cnt = this.clientCommand.getInputStream().read(buffer, 0, buffer.length);
-                   // System.out.println(" cnt ="+ cnt);   
                     if (cnt == -1)
                     {
                         throw new IOException("Reciveed - 1 bytes");
@@ -80,12 +76,8 @@ public class TCP_ReceiverCommand extends Thread
                 byte[] command =BAOS.toByteArray();
                 BAIS = new ByteArrayInputStream( command);
                 DIS = new DataInputStream(BAIS);
-               // byte size=DIS.readByte();
                 MessageAction MA= new MessageAction(DIS);
                 MA.getRobot(R);
-                
-               // System.out.println("    "+Cursor.getSystemCustomCursor(null));
-                
                 byte [] report ={1};
                
                 this.clientCommand.getOutputStream().write(report);       

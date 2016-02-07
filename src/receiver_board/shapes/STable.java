@@ -16,6 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -34,7 +35,7 @@ public class STable extends SContour implements IShapeAction
             this.rows=DIS.readByte();
             this.columns=DIS.readByte();
         } catch (IOException ex) {
-            Logger.getLogger(STable.class.getName()).log(Level.SEVERE, null, ex);
+           ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
        
     

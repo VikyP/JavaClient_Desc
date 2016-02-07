@@ -14,6 +14,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -76,8 +77,7 @@ public class MessageAction
         } 
         catch (IOException ex)
         {
-            System.out.println(ex.getMessage());
-            Logger.getLogger(MessageAction.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         } 
     }
     

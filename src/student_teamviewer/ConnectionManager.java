@@ -8,6 +8,7 @@ package student_teamviewer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 import masterPanel.SettingsConfig;
 
 /**
@@ -20,6 +21,7 @@ public class ConnectionManager
     private final ConnectCatch CC;
     private final ConnectCatchCommand CCC;
     private final UDP_Call Student_UDP_Message;
+    private final ThreadConnectionControl TCC;
     
     private class ThreadConnectionControl  extends Thread
     {
@@ -36,7 +38,7 @@ public class ConnectionManager
                 } 
                 catch (InterruptedException ex)
                 {
-                    Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+                    ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
                 }
             }
            
@@ -45,18 +47,23 @@ public class ConnectionManager
     }
    
    
-    public ConnectionManager( SettingsConfig sc) 
+    public ConnectionManager(int width) 
     {  
         
-        this.Student_UDP_Message = new UDP_Call(sc.IP, sc.PORT_UDP, sc.IP_UDP); 
+        this.Student_UDP_Message = new UDP_Call(); 
+        this.CC = new ConnectCatch( width );
+        this.CCC =new ConnectCatchCommand(); 
+        TCC= new ThreadConnectionControl();
         
-        this.CC = new ConnectCatch(sc.IP, sc.PORT_TCP_IMG, sc.width  );
-        this.CCC =new ConnectCatchCommand(sc.IP, sc.PORT_TCP_COMMAND );
-        
+    }
+    
+    public void startConnection()
+    { 
+        this.Student_UDP_Message.start();
         this.CC.start();
         this.CCC.start();
-        ThreadConnectionControl TCC= new ThreadConnectionControl();
-        TCC.start();
+        this.TCC.start();
+    
     }
    
     

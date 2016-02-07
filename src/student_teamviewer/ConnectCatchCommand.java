@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import masterPanel.ReportException;
+import masterPanel.SettingsConfig;
 
 /**
  *
@@ -19,9 +20,7 @@ import masterPanel.ReportException;
  */
 public class ConnectCatchCommand extends Thread 
 {
-    private InetAddress IP;
-    private int port_COMMAND;
-    
+   
     public boolean isConnect; 
     public Socket client_RC;
     public TCP_ReceiverCommand receiverCommand;
@@ -36,14 +35,10 @@ public class ConnectCatchCommand extends Thread
         }
     };
 
-    public ConnectCatchCommand(InetAddress ip,  int p_C) 
-    {
-        this.IP = ip;
-        
-        this.port_COMMAND = p_C;
+    public ConnectCatchCommand() 
+    {       
         this.setDaemon(true);
-        this.isConnect = false;
-        
+        this.isConnect = false;        
     }
 
    @Override
@@ -55,12 +50,12 @@ public class ConnectCatchCommand extends Thread
                 try 
                 {
 
-                    server_RC = new ServerSocket(this.port_COMMAND,-1, this.IP);
+                    server_RC = new ServerSocket(SettingsConfig.PORT_TCP_COMMAND,-1, SettingsConfig.IP);
                 }
                 catch (NullPointerException ex)
                 {
                     server_RC.close();                
-                    server_RC = new ServerSocket(this.port_COMMAND,-1,this.IP);
+                    server_RC = new ServerSocket(SettingsConfig.PORT_TCP_COMMAND,-1,SettingsConfig.IP);
                     System.out.println("Error 2" + ex.getMessage());
                     ReportException.write("ConnectCatch.run()  Error 2" + ex.getMessage());
                 } 
@@ -68,8 +63,8 @@ public class ConnectCatchCommand extends Thread
                 catch (BindException ex) 
                 {
                     /////////////// Second !!!!!!!!!!!
-                    System.out.println("Exception " + ex + this.IP + ":" + this.port_COMMAND);
-                    ReportException.write("ConnectCatch.run()  Error 1" + ex.getMessage() + this.IP + ":" + this.port_COMMAND);
+                    System.out.println("Exception " + ex +SettingsConfig.IP+ ":" +SettingsConfig.PORT_TCP_COMMAND );
+                    ReportException.write("ConnectCatch.run()  Error 1" + ex.getMessage() +SettingsConfig.IP+ ":" +SettingsConfig.PORT_TCP_COMMAND);
                     return;
                 }
 
@@ -106,11 +101,11 @@ public class ConnectCatchCommand extends Thread
 
         } catch (UnknownHostException ex) {
             System.out.println("Error 3" + ex.getMessage());
-            ReportException.write("ConnectCatch.run()  Error 3" + ex.getMessage() + this.IP + ":" + this.port_COMMAND);
+            ReportException.write("ConnectCatch.run()  Error 3" + ex.getMessage() + SettingsConfig.IP+ ":" +SettingsConfig.PORT_TCP_COMMAND);
         } 
         catch (IOException ex) {
             System.out.println("Error 3" + ex.getMessage());
-            ReportException.write("ConnectCatch.run()  Error 4" + ex.getMessage() + this.IP + ":" + this.port_COMMAND);
+            ReportException.write("ConnectCatch.run()  Error 4" + ex.getMessage()+SettingsConfig.IP+ ":" +SettingsConfig.PORT_TCP_COMMAND);
         }
 
     }

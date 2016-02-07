@@ -37,4 +37,5 @@ public class HistoryPanel  extends JPanel
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));    
     }
     
+    
 }

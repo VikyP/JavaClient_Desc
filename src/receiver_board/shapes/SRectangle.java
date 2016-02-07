@@ -16,6 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -35,7 +36,7 @@ public class SRectangle extends SContour implements IShapeAction
                 this.Filling=null;
         } catch (IOException ex)
         {
-            Logger.getLogger(SRectangle.class.getName()).log(Level.SEVERE, null, ex);
+           ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
     
     }

@@ -6,15 +6,12 @@
 package userControl;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
@@ -33,7 +30,7 @@ public class ToolsPanel extends JPanel {
     public JButton forecolor;
     public JButton backcolor;
     public JLabel IP;
-    public JLabel screenStatus;
+    public JButton connectionStatus;
     
     public final static int toolsHeigth=30;
     
@@ -47,45 +44,49 @@ public class ToolsPanel extends JPanel {
        // this.historyOn.setEnabled(false);
         setButtonPaintOff(this.historyOn);
         TB.add(this.historyOn);
-       
-       // TB.setBackground(Color.red);
-      //  this.screenDesk=new JToggleButton(ImageIconURL.get("resources/desk24.png"));
-      //  this.screenDesk.setSelectedIcon(ImageIconURL.get("resources/_Monitor24.png"));
-      //  this.screenDesk.setEnabled(false);
-     //   setButtonPaintOff(this.screenDesk);
-       // TB.add(this.screenDesk);
         
-        this.toolsOn= new JToggleButton(ImageIconURL.get("resources/setting24.png"));
-        this.toolsOn.setSelectedIcon(ImageIconURL.get("resources/setting24_press.png"));
-        this.toolsOn.setToolTipText("Настройки окна");
-        setButtonPaintOff(this.toolsOn);
-        TB.add(this.toolsOn);
+   
+        
+        
       
         this.backcolor= new JButton(ImageIconURL.get("resources/themes_24.png"));
         this.backcolor.setPressedIcon(ImageIconURL.get("resources/themes_24_press.png"));
         this.backcolor.setToolTipText("Цвет фона доски");
         setButtonPaintOff(this.backcolor);
         TB.add(this.backcolor);
+        
         this.forecolor= new JButton(ImageIconURL.get("resources/Fontcolor24.png"));
         this.forecolor.setPressedIcon(ImageIconURL.get("resources/Fontcolor24_press.png"));
         this.forecolor.setToolTipText("Цвет текста доски");
         setButtonPaintOff(this.forecolor);
         TB.add(this.forecolor);
         
+        this.toolsOn= new JToggleButton(ImageIconURL.get("resources/setting24.png"));
+        this.toolsOn.setSelectedIcon(ImageIconURL.get("resources/setting24_press.png"));
+        this.toolsOn.setToolTipText("Настройки окна");
+        setButtonPaintOff(this.toolsOn);
+        TB.add(this.toolsOn);
+        
+        
+        
         JPanel panelStatus=new JPanel();
         panelStatus.setLayout(new FlowLayout(FlowLayout.CENTER));
-        this.IP= new JLabel();
-       
-        this.IP.setIcon(ImageIconURL.get("resources/IP_student_.png"));
+        this.IP= new JLabel();       
+      //  this.IP.setIcon(ImageIconURL.get("resources/IP_student_.png"));
         this.IP.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
         this.IP.setHorizontalAlignment(SwingConstants.CENTER);
        
-        this.screenStatus=new JLabel();
+        this.connectionStatus=new JButton(ImageIconURL.get("resources/IP_student_Off.png"));
+        this.connectionStatus.setToolTipText("Настройки подключения");
+        this.connectionStatus.setSelectedIcon(ImageIconURL.get("resources/Fontcolor24.png"));
+        
+        setButtonPaintOff(this.connectionStatus);
       //  this.screenStatus.setIcon(ImageIconURL.get("resources/signalOff.png"));
         JPanel TBWin= new JPanel();
         
-     //   panelStatus.add(this.screenStatus);
+        panelStatus.add(this.connectionStatus);
         panelStatus.add(this.IP);
+        
         this.minsize= new JButton(ImageIconURL.get("resources/minsize16.png"));
         this.minsize.setToolTipText("Свернуть");
         this.minsize.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.DEFAULT_CURSOR));

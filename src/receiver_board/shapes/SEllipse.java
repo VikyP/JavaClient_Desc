@@ -6,16 +6,12 @@
 package receiver_board.shapes;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -48,7 +44,7 @@ public class SEllipse extends SContour implements IShapeAction
                 this.Filling=null;
         } catch (IOException ex)
         {
-            Logger.getLogger(SEllipse.class.getName()).log(Level.SEVERE, null, ex);
+            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
         }
     }
 

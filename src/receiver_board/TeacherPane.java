@@ -6,12 +6,9 @@
 package receiver_board;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 
 import java.awt.image.BufferedImage;
@@ -23,8 +20,6 @@ import java.io.EOFException;
 import java.io.File;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import masterPanel.ReportException;
@@ -104,7 +99,7 @@ public class TeacherPane extends JComponent
        
         Graphics2D g2D = (Graphics2D) g.create();        
         g2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2D.drawImage(this.BI,0,0,this.getWidth()-10,this.getHeight()-10,this);
+        g2D.drawImage(this.BI,0,0,this.getWidth(),this.getHeight(),this);
         g2D.dispose();
     
     }
@@ -168,7 +163,7 @@ public class TeacherPane extends JComponent
 
         } catch (IOException ex)
         {
-            Logger.getLogger(TeacherPane.class.getName()).log(Level.SEVERE, null, ex);
+           
             ReportException.write("StudentPane.UnPackPrewiew()"+ex.getMessage());
         }
 

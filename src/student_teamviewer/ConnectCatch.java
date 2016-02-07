@@ -7,11 +7,11 @@ package student_teamviewer;
 
 import java.io.IOException;
 import java.net.BindException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import masterPanel.ReportException;
+import masterPanel.SettingsConfig;
 
 /**
  *
@@ -19,8 +19,7 @@ import masterPanel.ReportException;
  */
 public class ConnectCatch extends Thread {
 
-    private InetAddress IP;
-    private int port_IMG;
+   
     public Socket client_IMG;
 
     private IReconnect IR = new IReconnect() {
@@ -34,11 +33,9 @@ public class ConnectCatch extends Thread {
     public Thread_SenderImage TRW;
     private int W;
 
-    public ConnectCatch(InetAddress ip, int p_I, int w)
+    public ConnectCatch( int w)
     {
-      //  System.out.println("Start catch");
-        this.IP = ip;
-        this.port_IMG = p_I;
+      
         this.setDaemon(true);
         this.isConnect = false;
         this.W=w;
@@ -52,19 +49,19 @@ public class ConnectCatch extends Thread {
         try {
             try
             {
-                server_IMG = new ServerSocket(this.port_IMG, -1, this.IP);
+                server_IMG = new ServerSocket(SettingsConfig.PORT_TCP_IMG, -1, SettingsConfig.IP);
             }
             catch(NullPointerException ex)
             {
                 server_IMG.close();
-                server_IMG = new ServerSocket(this.port_IMG, -1, this.IP);
+                server_IMG = new ServerSocket(SettingsConfig.PORT_TCP_IMG, -1,SettingsConfig.IP);
                 System.out.println("Error 2" + ex.getMessage());
                 ReportException.write("ConnectCatch.run()  Error 2" + ex.getMessage());
             }
             catch (BindException ex) {
                 /////////////// Second !!!!!!!!!!!
-                System.out.println("Exception " + ex + this.IP + ":" + this.port_IMG);
-                ReportException.write("ConnectCatch.run()  Error 1" + ex.getMessage() + this.IP + ":" + this.port_IMG);
+                System.out.println("Exception " + ex + SettingsConfig.IP + ":" + SettingsConfig.PORT_TCP_IMG);
+                ReportException.write("ConnectCatch.run()  Error 1" + ex.getMessage() + SettingsConfig.IP + ":" + SettingsConfig.PORT_TCP_IMG);
                 return;
             }
 
@@ -101,10 +98,10 @@ public class ConnectCatch extends Thread {
 
         } catch (UnknownHostException ex) {
             System.out.println("Error 3" + ex.getMessage());
-            ReportException.write("ConnectCatch.run()  Error 3" + ex.getMessage() + this.IP + ":" + this.port_IMG);
+            ReportException.write("ConnectCatch.run()  Error 3" + ex.getMessage()  + SettingsConfig.IP + ":" + SettingsConfig.PORT_TCP_IMG);
         } catch (IOException ex) {
             System.out.println("Error 3" + ex.getMessage());
-            ReportException.write("ConnectCatch.run()  Error 4" + ex.getMessage() + this.IP + ":" + this.port_IMG);
+            ReportException.write("ConnectCatch.run()  Error 4" + ex.getMessage()  + SettingsConfig.IP + ":" + SettingsConfig.PORT_TCP_IMG);
         }
 
     }

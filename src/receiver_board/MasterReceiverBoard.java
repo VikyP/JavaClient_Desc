@@ -6,14 +6,11 @@
 package receiver_board;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -76,8 +73,7 @@ public class MasterReceiverBoard extends JPanel {
        
        
         this.tools = new ToolsPanel();
-        this.tools.IP.setText( " IP "+SC.IP.getHostAddress());
-     //   this.tools.setPreferredSize(new Dimension(SC.Bounds.width,40));
+        this.tools.IP.setText( " IP "+SettingsConfig.IP.getHostAddress()+":"+SettingsConfig.PORT_UDP);
         this.tools.forecolor.addActionListener(new ActionListener()
         {
             @Override
@@ -90,12 +86,12 @@ public class MasterReceiverBoard extends JPanel {
                     "Новый цвет текста", true, colorChooser,
                     new ActionListener() 
                     {                           
+                        @Override
                         public void actionPerformed(ActionEvent e)
                         {
                            hidePanel();
                            BR.setForeground(colorChooser.getSelectionModel().getSelectedColor());  
                            SC.saveSettingsFore(BR.getForeground());
-                           
                         }
 
                     },  null) .setVisible(true); 
@@ -114,6 +110,7 @@ public class MasterReceiverBoard extends JPanel {
                     "Новый цвет фона", true, colorChooser,
                     new ActionListener() 
                     {                           
+                        @Override
                         public void actionPerformed(ActionEvent e)
                         {  
                             BR.setBackground(colorChooser.getSelectionModel().getSelectedColor());
@@ -216,6 +213,7 @@ public class MasterReceiverBoard extends JPanel {
             this.TP.UpdateSize();
             this.scrollPane.setViewportView(screenPanel);
         }
+        
     }
     
    

@@ -5,13 +5,11 @@
  */
 package student_teamviewer;
 
-import java.awt.MouseInfo;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import masterPanel.ReportException;
+import masterPanel.SettingsConfig;
 
 /**
  *
@@ -19,24 +17,17 @@ import java.util.logging.Logger;
  */
 public class UDP_Call extends Thread 
 {
-    private InetAddress IP;
-    private InetAddress IP_UDP;
-    private int port;
+  
     private DatagramSocket DS;
     public boolean isConnected;
    
-    public UDP_Call(InetAddress ip, int  port, InetAddress ip_udp)
+    public UDP_Call()
     {
         
         try
         {
-            
-            this.IP=ip;
-            this.port=port;
-            this.IP_UDP=ip_udp;
             this.DS= new DatagramSocket();
-            this.setDaemon(true);
-            this.start();
+            this.setDaemon(true);            
             this.isConnected=false;
           //  System.out.println("    IP"+this.IP+"  IP_udp"+this.IP_UDP+"  port"+this.port);
                
@@ -66,7 +57,7 @@ public class UDP_Call extends Thread
             }
             catch (InterruptedException ex)
             {
-                Logger.getLogger(UDP_Call.class.getName()).log(Level.SEVERE, null, ex);
+               ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
             }
             
         }
@@ -78,13 +69,10 @@ public class UDP_Call extends Thread
         try
         {
             
-            String msg=("NEW"+";"+this.IP.getHostAddress()+";"+this.port); 
+            String msg=("NEW"+";"+SettingsConfig.IP.getHostAddress()+";"+SettingsConfig.PORT_UDP); 
             byte[] a=msg.getBytes("UTF8");  
             DatagramPacket DP= new DatagramPacket(
-                    a, a.length, IP_UDP, this.port);
-            
-           // System.out.println( msg);
-        
+                    a, a.length, SettingsConfig.IP_UDP, SettingsConfig.PORT_UDP);
             this.DS.send(DP);
         }
         catch(Exception se)

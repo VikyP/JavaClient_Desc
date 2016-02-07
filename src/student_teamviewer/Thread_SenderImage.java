@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import masterPanel.ReportException;
 
 /**
  *
@@ -110,7 +111,7 @@ class Thread_SenderImage extends Thread
            
            catch (IOException ex)
            {
-               Logger.getLogger(Thread_SenderImage.class.getName()).log(Level.SEVERE, null, ex);
+               ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
            }
         }
     }
