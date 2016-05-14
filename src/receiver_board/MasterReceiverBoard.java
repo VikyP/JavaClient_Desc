@@ -6,6 +6,7 @@
 package receiver_board;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -116,6 +117,7 @@ public class MasterReceiverBoard extends JPanel {
                             BR.setBackground(colorChooser.getSelectionModel().getSelectedColor());
                             BR.setColorLine();
                             SC.saveSettingsBack(BR.getBackground());
+                            canvasPanel.setBackground(getPanelBackground(BR.getBackground()));
                         }
                         
                     },  null).setVisible(true); 
@@ -168,8 +170,9 @@ public class MasterReceiverBoard extends JPanel {
          
         this.BR = new Canvas_BoardR(pane,SC.Background,SC.Foreground);
         this.canvasPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
-        this.canvasPanel.setOpaque(false);
+       //this.canvasPanel.setOpaque(false);
         this.canvasPanel.add(this.BR);
+        this.canvasPanel.setBackground(getPanelBackground(SC.Background));
         
         screenPanel= new JPanel(new FlowLayout(FlowLayout.CENTER));
       //  screenPanel= new JPanel(new BorderLayout());
@@ -257,5 +260,22 @@ public class MasterReceiverBoard extends JPanel {
     {
         return this.tools.getPreferredSize().height;
     }
+    
+    /**
+     * Определение цвета фона компонента, содержащего доску
+     * @param c фон доски
+     * @return цвет фона компонента
+     */
+    private Color getPanelBackground(Color c)
+    {
+        int delta = 30;
+        int r = c.getRed() > 150 ? c.getRed() - delta : c.getRed() + delta;
+        int g = c.getGreen() > 150 ? c.getGreen() - delta : c.getGreen() + delta;
+        int b = c.getBlue() > 150 ? c.getBlue() - delta : c.getBlue() + delta;
+        Color p = new Color(r, g, b);
+
+        return p;
+    }
+
 
 }

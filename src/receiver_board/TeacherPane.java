@@ -20,6 +20,8 @@ import java.io.EOFException;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import masterPanel.ReportException;
@@ -37,7 +39,10 @@ public class TeacherPane extends JComponent
     public Dimension DImg;
     private Dimension DImgReal;
     private int scale_point=1;  
-    public Dimension imgD=new Dimension(250,250);;
+    public Dimension imgD=new Dimension(250,250);
+    int []R ;
+    
+    
   
     public IImageChanged UR= new IImageChanged()
     {
@@ -71,18 +76,21 @@ public class TeacherPane extends JComponent
         }
 
     };
+    
+   
+            
+            
     public static Dimension PaneSize=new Dimension(250,250);
       
     public TeacherPane()
     { 
-       //System.out.println(" Create StudentPane");
       
        this.DImg= new Dimension(PaneSize.width-10,PaneSize.height-20);
        this.DImgReal= new Dimension(PaneSize.width,PaneSize.height);
        this.BI= new BufferedImage(this.DImg.width,this.DImg.height, BufferedImage.TYPE_INT_ARGB); 
        this.BI_Row= new BufferedImage(this.DImg.width,this.DImg.height, BufferedImage.TYPE_INT_ARGB);
-       
        this.setPreferredSize(this.PaneSize);
+       this.R= new int [1000];
       
     }
     
@@ -104,9 +112,9 @@ public class TeacherPane extends JComponent
     
     }
     
+    
     public  void UnPackFast( DataInputStream DIS ) 
-    {
-         
+    {         
         try
         {          
             int w=DIS.readInt();  
@@ -114,6 +122,7 @@ public class TeacherPane extends JComponent
             if(this.DImgReal.width!=w ||this.DImgReal.height!=h)
             {
                 this.DImgReal= new Dimension(w,h);
+                this.R= new int [w*h];
                 UpdateSize();
             }           
            int WF= DIS.readInt();
@@ -124,10 +133,7 @@ public class TeacherPane extends JComponent
                 {
                    this.BI= new BufferedImage(WF, HF, BufferedImage.TYPE_INT_RGB);  
                 } 
-                
-            int value=0;
-            int value1=0;
-            int value2=0;
+            int value=0;int value1=0;int value2=0;
             WritableRaster WR_Small = this.BI.getRaster();      
             DataBuffer DB_small = WR_Small.getDataBuffer();
             for (int i =0; i <HF; i++)
@@ -141,17 +147,13 @@ public class TeacherPane extends JComponent
                     DB_small.setElem(i*WF+j+1,value2) ;
                 }
             }
-           
             this.repaint();
             }
         }
         catch (IOException ex)
         {
-            System.out.println(ex.getMessage());
             ReportException.write("StudentPane.UnPackPrewiew()"+ex.getMessage());
         }
-        
-   
     }
    
     public void testImage(BufferedImage BI, String name)

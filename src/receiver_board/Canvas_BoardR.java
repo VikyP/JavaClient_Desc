@@ -17,7 +17,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -25,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JEditorPane;
+import javax.swing.JTextArea;
 import masterPanel.ReportException;
 import receiver_board.Canvas_BoardR.MyMouselistener;
 import receiver_board.shapes.IShapeAction;
@@ -35,7 +35,7 @@ import userControl.HistoryPanel;
  *
  * @author viky
  */
-public class Canvas_BoardR extends JEditorPane
+public class Canvas_BoardR extends JTextArea //JEditorPane
 {
 
   
@@ -136,18 +136,18 @@ public class Canvas_BoardR extends JEditorPane
 
         @Override
         public void getNewText(byte numPage, byte numLine,byte fontHeigt, String s)
-        {
+        { 
             try{
                 if(fontHeigt==0)
                     return;
                
                 if(fontSize != fontHeigt)
-                {                  
+                {                
                     fontSize=fontHeigt;
                     Canvas_BoardR.this.F=new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
                     Canvas_BoardR.this.setFont(F);
                     getMetrics();
-                    getMetricsScale(Canvas_BoardR.this.F.deriveFont(fontSize*scale)); 
+                    getMetricsScale(Canvas_BoardR.this.F.deriveFont((float)fontSize*scale)); 
                     Canvas_BoardR.this.scale();
                 }
 
@@ -161,19 +161,19 @@ public class Canvas_BoardR extends JEditorPane
             {
                 Canvas_BoardR.this.numberPageGet = 0;
             }
-           
+            
             if(!history.isVisible() && currentPage != numberPageGet)
             {
                 setCurrentPage();
             }
             else
-            {
-                if(pageIndex!=numberPageGet)
+            {   
+                if(pageIndex!=numPage)
                 { 
+                    
                     for (PageContent p : pages)
                     {
-                        p.isCurrent = (numberPageGet == p.number);
-                        
+                        p.isCurrent = (numberPageGet == p.number ); 
                     } 
                     history.repaint();
                 }
@@ -186,6 +186,7 @@ public class Canvas_BoardR extends JEditorPane
             {
                 if(! s.equals(Canvas_BoardR.this.getText()))
                 {
+                   
                     Canvas_BoardR.this.setText("");                
                     Canvas_BoardR.this.setText(s);
                     return;
@@ -254,8 +255,7 @@ public class Canvas_BoardR extends JEditorPane
 
             //номер доски отрицательный( транслируется доска не текущей даты)
             //положительный сохраняем в историю             
-            Canvas_BoardR.this.pagesUpdate(numberPageGet, SA);           
-            Canvas_BoardR.this.repaint();
+            Canvas_BoardR.this.pagesUpdate(numberPageGet, SA);    
         }
 
     };
@@ -275,6 +275,7 @@ public class Canvas_BoardR extends JEditorPane
         this.setSize(this.dimScale);
         this.setPreferredSize(dimScale);
         getMetricsScale(F.deriveFont(scale*F.getSize()));
+        this.setWrapStyleWord(true);
 
         this.setBackground(b);
         this.setForeground(f);
@@ -285,7 +286,7 @@ public class Canvas_BoardR extends JEditorPane
         // нулевая страница соответсвует текущей присланной
         this.pages.add(new PageContent((byte)0, b, f, new MyMouselistener()));
         this.history.historyPanel.add(this.pages.get(this.pages.size() - 1));
-
+       
         this.numberPageGet = 0;
         this.currentPage = this.numberPageGet;
         this.addComponentListener(new ComponentListener()
@@ -333,6 +334,8 @@ public class Canvas_BoardR extends JEditorPane
         });
 
     }
+    
+    
     /**
      *Определяем  высоту доски в зависимости от шрифта
      * в разных системах один шрифт отрисовывается по разному 
@@ -371,8 +374,8 @@ public class Canvas_BoardR extends JEditorPane
         this.rowDescentSC=(byte)metrics.getMaxDescent();
         
      //   System.out.println("    w scale " + (this.colWidthSC*(this.colsCount+1)+(int) (left*scale)+(int) (right*scale) ));
-        
-        this.setMargin( new Insets((int) (top*scale), (int) (left*scale), (int) (bottom*scale), (int) (right*scale)));
+      
+        this.setMargin( new Insets((int) ((float)top*scale), (int) ((float)left*scale), (int) ((float)bottom*scale),(int) ((float)right*scale)));
         g2d.dispose(); 
     }
    
@@ -402,15 +405,23 @@ public class Canvas_BoardR extends JEditorPane
        try
        {
             Graphics2D g2D = (Graphics2D)g.create();
+            g2D.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+            g2D.setRenderingHint(java.awt.RenderingHints.KEY_TEXT_ANTIALIASING, java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             rebuildBuffer();
             g2D.setColor(getBackground());
             g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
+           
+            
             g.drawImage(buffer, 0, 0, this);
+            
             drawLinesNumber(g2D);
             //изменяем порядок прорисовки сначала фигуры потом текст
+           
             getUI().paint(g2D, this);
             g2D.dispose();
             this.hashCode();
+            System.out.println("    F "+this.getFont().getSize2D());
+            
           
        }
        catch(Exception exc)
@@ -543,7 +554,6 @@ public class Canvas_BoardR extends JEditorPane
        
         this.setSize(D);
         this.setPreferredSize(D);
-       
         this.setFont(F.deriveFont(fontSize*scale)); 
         
     }
@@ -564,7 +574,7 @@ public class Canvas_BoardR extends JEditorPane
         }
 
         if (!this.pages.get(number).getText().equals(msg))
-        {
+        {           
             this.pages.get(number).setTextContent(msg);
         }
     }
@@ -577,7 +587,10 @@ public class Canvas_BoardR extends JEditorPane
             this.history.historyPanel.add(this.pages.get(this.pages.size() - 1));
         }
 
+        boolean flag =this.pages.get(this.currentPage).shapesContent.size()==SA.size();
         this.pages.get(number).setGraph(SA);
+        if(!flag)
+            this.repaint();
 
     }
 

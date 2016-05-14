@@ -276,8 +276,8 @@ public class MasterFrame extends JFrame
         }
 
         if (!SC.isFirst)
-        {
-            JOptionPane.showMessageDialog(this, "Допускается запуск только одной копии");
+        {           
+            JOptionPane.showMessageDialog(this, " Порт  "+SettingsConfig.PORT_UDP_BOARD+" уже используется.\n Возможно приложение уже запущенно");
             System.exit(0);
         }
         this.setIconImage(ImageIconURL.get("resources/desk24.png").getImage());
@@ -321,8 +321,7 @@ public class MasterFrame extends JFrame
             }
         });
 
-        this.setTitle("WhiteBoard_Java ");
-
+        
         this.tools = new ClientToolsPanel();
         this.tools.setVisible(false);
         this.tools.setBounds(toolPanelX, MRB.getHeightToolBar(), toolPanelWidth, toolPanelHeight);
@@ -337,7 +336,6 @@ public class MasterFrame extends JFrame
                 ConnectionDialog CD= new ConnectionDialog(MasterFrame.this,isConnect);
                 CD.setVisible(true);               
                 
-                System.out.println("    Return " +CD.getValue());
                 boolean f = SC.setCongig();
                 if(CD.getValue()==0)
                 {

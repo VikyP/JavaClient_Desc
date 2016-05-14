@@ -42,8 +42,7 @@ public class ReceiverScreeen_UDP extends Thread
         {
             DatagramSocket  DS  = new DatagramSocket (this.port_UDP);           
             byte[] byte_info= new byte [65536] ;
-            DatagramPacket info= new DatagramPacket (byte_info, 0, byte_info.length);
-            
+            DatagramPacket info= new DatagramPacket (byte_info, 0, byte_info.length);           
             
             while(true)
             {
@@ -64,15 +63,11 @@ public class ReceiverScreeen_UDP extends Thread
                 {
                     name_gr[i]=DIS.readChar();
                 }        
-              //  System.out.println(" Group " + new String(name_gr));                
-                 /*************************************/
-                
-                
-                
+              
                 int   lengthByteArr = DIS.readInt();
-               // System.out.println(" lengthByteArr " + lengthByteArr); 
+                System.out.println(" lengthByteArr " + lengthByteArr); 
                 byte typeImage=DIS.readByte();
-             //    System.out.println(" typeImage " + typeImage);
+                 System.out.println(" typeImage " + typeImage);
                ///////////// System.out.println("    ------------------------------"+lengthByteArr);                
                 ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
                 byte[] dataBuffer = new byte[8192];
@@ -90,7 +85,6 @@ public class ReceiverScreeen_UDP extends Thread
                 while (lengthByteArr - size > 0);
                     
                 byte[] body= unzip(BAOS.toByteArray());
-               
                 BAIS.reset();
                 BAIS= new ByteArrayInputStream(body); 
                 DIS= new DataInputStream(BAIS);
@@ -116,7 +110,7 @@ public class ReceiverScreeen_UDP extends Thread
     
     private byte [] unzip(byte [] tmp)
     {
-            
+        
         byte[] buffer = new byte[8192]; 
         ByteArrayOutputStream Baos = new ByteArrayOutputStream();
         ByteArrayInputStream BAIS = new ByteArrayInputStream(tmp);

@@ -5,6 +5,8 @@
  */
 package masterPanel;
 
+import java.net.InetAddress;
+
 
 /**
  *
@@ -18,6 +20,7 @@ public class Receiver_Board
      */
     public static void main(String[] args)
     {
+        
           MasterFrame MF= new MasterFrame(); 
       
     }

@@ -38,7 +38,15 @@ import java.beans.*; //property change stuff
 import java.awt.*;
 import java.awt.event.*;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -62,14 +70,19 @@ class ConnectionDialog extends JDialog
     private final String OK = "OK";
     private Dimension controlD;
     private boolean isValid=true;
+ final static private Pattern ipPattern =  Pattern.compile("((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)");
+  //  final static private Pattern ipPattern =  Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
+
 
    
 
     /** Creates the reusable dialog. */
     public ConnectionDialog(Frame aFrame, boolean flag) {
         super(aFrame, true);
-
-        
+        /*
+        Matcher m=ipPattern.matcher("192.168.0.103");
+        if(m.find())            
+        System.out.println("    M " +m.group());*/
         btnString1 =flag?OK: CONNECT;
         setTitle("Настройки подключения");
         controlD=new Dimension(100, 20);
@@ -94,28 +107,46 @@ class ConnectionDialog extends JDialog
             public void focusLost(FocusEvent e)
             {
                 JTextField tf=(JTextField)e.getSource();
+                ArrayList<InetAddress> ipList = new ArrayList<InetAddress >();
                 try
                 {
-                    InetAddress  ip =InetAddress.getByName(tf.getText());                    
-                    InetAddress[] ip_=InetAddress.getAllByName(InetAddress.getLocalHost().getHostAddress());
-                    for(InetAddress i:ip_)
+                    InetAddress  ip =InetAddress.getByName(tf.getText()); 
+                    try
                     {
-                        System.out.println("  IP  "+ i);
-                        boolean f=true;
-                        for (int j = 0; j < 4; j++)
+                        Enumeration item = NetworkInterface.getNetworkInterfaces();
+                        Matcher m=null;
+                        while(item.hasMoreElements())
                         {
-                            f=(ip.getAddress()[j]==i.getAddress()[j]  );
-                            System.out.println("  IP  "+(ip.getAddress()[j]==i.getAddress()[j]));
-                           if(!f) break;
+                            NetworkInterface n = (NetworkInterface) item.nextElement();
+                            Enumeration ee = n.getInetAddresses();                            
+                            while (ee.hasMoreElements())
+                            {
+                                
+                                InetAddress i = (InetAddress) ee.nextElement();
+                                 m = ipPattern.matcher(i.getHostAddress());
+                                 if(m.matches())
+                                ipList.add(i);                                
+                            }
+                           
                         }
-                        if(f)
-                        {
-                            SettingsConfig.IP= ip;
-                            return;
+                        boolean flag=true;
+                        /*
+                        проверка адресов машины
+                        */
+                        for(InetAddress i:ipList)
+                        {       
+                             if(ip.equals(i))
+                             { 
+                                SettingsConfig.IP= ip;
+                                return;
+                             }
                         }
-                    } 
+                        
+                    } catch (SocketException ex)
+                    {
+                        Logger.getLogger(ConnectionDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     
-                    error.setText(" Уточните настройки сети "+tf);
                 } 
                 catch (UnknownHostException ex)
                 {

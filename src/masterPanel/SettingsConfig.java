@@ -11,11 +11,18 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,7 +54,7 @@ public class SettingsConfig
     
     public int width;
     public float opacity;
-    
+    final static private Pattern ipPattern =  Pattern.compile("((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)");
     public Rectangle Bounds= new Rectangle();
     
     
@@ -70,12 +77,14 @@ public class SettingsConfig
      */
     public static int  PORT_TCP_COMMAND;
     private  final int DELTA_TCP_COMMAND=3;
+    
     /**
      * порт для получения экрана преподавателя по UDP
      */
     public static int  PORT_TCP_ScStr;
     private final int DELTA_TCP_ScStr=4;
-    
+    public static int  PORT_TCP_ScStr_R;
+    private final int DELTA_TCP_ScStr_R=5;
     
     public static InetAddress IP;
     public static InetAddress IP_UDP;
@@ -86,7 +95,7 @@ public class SettingsConfig
     public  SettingsConfig()
     {
         isValid=isLoadStyle();
-        isFirst=isFirst();       
+        isFirst=isFirst(); 
     }
     
     
@@ -99,8 +108,6 @@ public class SettingsConfig
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             this.doc = builder.parse(new File("Settings.xml"));
-            
-           
             //<editor-fold defaultstate="collapsed" desc="Информация для соединений IP & ports ">
      
             Element ip = (Element)doc.getElementsByTagName("IP").item(0); 
@@ -114,29 +121,53 @@ public class SettingsConfig
             
             Element isConnect=(Element)doc.getElementsByTagName("AutoConnection").item(0);
             this.isConnection=Boolean.parseBoolean(isConnect.getTextContent());
-            
+            // уточняем IP
             if(this.isDefine)
            {
-               // уточняем IP
-               InetAddress [] all_IP=InetAddress.getAllByName(InetAddress.getLocalHost().getHostAddress());
-               for(InetAddress ip_Item:all_IP)
-               {
-                  // System.out.println(" IP "+ip_Item);
-                    boolean f=true;
-                    for (int j = 0; j < 4; j++)
+               ArrayList<InetAddress> ipList = new ArrayList<InetAddress >();                  
+                try
+                {
+                    Enumeration item = NetworkInterface.getNetworkInterfaces();
+                    Matcher m=null;
+                    while(item.hasMoreElements())
                     {
-                        f=((this.IP_UDP.getAddress()[j]&0xFF)==(ip_Item.getAddress()[j]&0xFF) ||(this.IP_UDP.getAddress()[j]&0xFF)==255 );
+                        NetworkInterface n = (NetworkInterface) item.nextElement();
+                        Enumeration ee = n.getInetAddresses();                            
+                        while (ee.hasMoreElements())
+                        {
+
+                            InetAddress i = (InetAddress) ee.nextElement();
+                             m = ipPattern.matcher(i.getHostAddress());
+                             if(m.matches())
+                            ipList.add(i);                                
+                        }
                     }
-                    if(f)
-                    {
-                        SettingsConfig.IP= ip_Item;
-                        ip.setTextContent(this.IP.getHostAddress());
-                        saveDoc(); 
-                       // break;
-                    }               
-               
-               }               
-           }
+                    boolean flag=true;
+                    for(InetAddress ip_Item:ipList)
+                    {       
+                        boolean f=true;
+                        System.out.println("    IP "+ip_Item);
+                        for (int j = 0; j < 4; j++)
+                        {
+                            f=((IP_UDP.getAddress()[j]&0xFF)==(ip_Item.getAddress()[j]&0xFF)||(this.IP_UDP.getAddress()[j]&0xFF)==255 );
+                            if(!f)break;
+                        }
+                        if(f)
+                        {
+                            SettingsConfig.IP= ip_Item;                            
+                            ip.setTextContent(this.IP.getHostAddress());
+                            saveDoc(); 
+                            break;
+                        }   
+                    }
+
+                } 
+                catch (SocketException ex)
+                {
+                    Logger.getLogger(ConnectionDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                    
+            } 
             
             Element p_udp = (Element)doc.getElementsByTagName("PORT_UDP").item(0); 
             this.PORT_UDP=Integer.parseInt(p_udp.getTextContent()); 
@@ -189,29 +220,21 @@ public class SettingsConfig
     }
     
      public boolean isFirst()
-    {
-        boolean flag=false;
-         try 
-         { 
-             ServerSocket s=null;
-             try
-             {
-                 s= new ServerSocket(PORT_TCP_IMG);
-                 flag=true;    
-             } 
-             catch (Exception se)
-             {
-                 ReportException.write("Sender_UDP.Send(..)!!!!!!!!!!!!" + se.getMessage());
-             }
-             if(flag)
-                 s.close();
-             
-         } 
-         catch (IOException ex)
+    { 
+        DatagramSocket  DS=null;
+        try
         {
-            ReportException.write(this.toString()+"\t"+ex.getMessage() ); 
+           DS  = new DatagramSocket (PORT_UDP_BOARD);
+           DS.close();
+           DS=null;
+        } 
+        catch (IOException ex)
+        { 
+            ReportException.write(" "+ ex.getMessage());           
+            return false;
         }
-        return flag;
+        
+        return true;
     }
      
      /**
@@ -267,6 +290,7 @@ public class SettingsConfig
         PORT_TCP_IMG=PORT_UDP+DELTA_TCP_IMG;
         PORT_TCP_COMMAND=PORT_UDP+DELTA_TCP_COMMAND;
         PORT_TCP_ScStr=PORT_UDP+DELTA_TCP_ScStr;
+        PORT_TCP_ScStr_R=PORT_UDP+DELTA_TCP_ScStr_R;
     }
     
    public  boolean setCongig ()
